@@ -1,7 +1,7 @@
-if exists('neopipe_auto') || &cp || version < 700
+if exists('g:neopipe_auto')
   finish
 endif
-let neopipe_auto = 1
+let g:neopipe_auto = 1
 
 
 function! neopipe#pipe(type)
@@ -10,11 +10,12 @@ function! neopipe#pipe(type)
     let l:parent = bufnr('%')
     vsplit new
     let l:child = bufnr('%')
-    call nvim_buf_set_lines(t:child, 0, -1, 0, [])
     exe l:parent . 'wincmd'
     let b:child = l:child
   endif
 
+  let l:sel_save = &selection
+  let &selection = 'inclusive'
   let l:saved_unnamed_register = @@
 
   if a:type ==# 'v'
@@ -31,5 +32,6 @@ function! neopipe#pipe(type)
 
   call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
 
+  let &selection = l:sel_save
   let @@ = l:saved_unnamed_register
 endfunction
