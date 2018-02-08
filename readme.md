@@ -22,12 +22,12 @@ Table of Contents
 
 <!-- vim-markdown-toc -->
 
-[projectionsit]: https://github.com/tpope/vim-projectionist
+[projectionist]: https://github.com/tpope/vim-projectionist
 
 Introduction
 ============
 
-The purpsoe of this plugin is to allow the user to send text through an
+The purpose of this plugin is to allow the user to send text through an
 external command and display the output in a scratch buffer. Mappings are
 defined which can take an operator, work on a visual selection, or work on a
 line.
@@ -35,17 +35,14 @@ line.
 Dependencies
 ============
 
-This plugin has no depenencies, but can work with tpope's
-[projectionsit]
-bleh
-[projectionsit](https://github.com/tpope/vim-projectionist) plugin.
+This plugin has no dependencies, but can work with tpope's [projectionist]
+plugin.
 
 Setup
 =====
 
 Neopipe has three variables that can be defined at the buffer or global level,
-or as part of a projection from tpope's
-[projectionsit](https://github.com/tpope/vim-projectionist) plugin. The three
+or as part of a projection from tpope's [projectionist] plugin. The three
 variables are: neopipe\_start, neopipe\_command, and neopipe\_ft.
 
 neopipe\_start
