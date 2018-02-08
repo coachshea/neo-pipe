@@ -39,12 +39,15 @@ This plugin provides the following mappings:
 <Plug>(neopipe-line)
 ```
 
-By default these will be mapped to:
+As expected, the "operator" mapping leaves the user in operator-pending mode
+and sends the results of the operator to the command. The "visual" mapping
+sends the viusally selected text, and the "line" mapping send the current
+line. By default these will be mapped to:
 
 ```vim
 nmap ,t <Plug>(neopipe-operator)
-nmap ,t <Plug>(neopipe-visual)
 nmap ,tt <Plug>(neopipe-line)
+vmap ,t <Plug>(neopipe-visual)
 ```
 
 If this is not desired simply include the following in your init.vim:
