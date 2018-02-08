@@ -34,3 +34,7 @@ function! neopipe#pipe(type)
   let &selection = l:sel_save
   let @@ = l:saved_unnamed_register
 endfunction
+
+function! neopipe#close()
+  silent! bw! b:child
+endfunction
