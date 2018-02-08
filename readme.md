@@ -5,9 +5,8 @@
                     |_| \_|_____\___/|_|  |___|_|   |_____|
                                                            
 
-# Neo-Pipe
-
-## Table of Contents
+Table of Contents
+=================
 
 <!-- vim-markdown-toc GFM -->
 
@@ -18,13 +17,17 @@
 
 <!-- vim-markdown-toc -->
 
-## Purpose
+Purpose
+=======
 
 The purpsoe of this plugin is to allow user to send selected text through an
 external command and display the output in a scratch buffer.
 
-## Usage
+Usage
+=====
 
-## Mappings
+Mappings
+========
 
-## Summary
+Summary
+=======
