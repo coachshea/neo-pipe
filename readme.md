@@ -22,7 +22,7 @@ Table of Contents
 
 <!-- vim-markdown-toc -->
 
-[projectionsit]: (https://github.com/tpope/vim-projectionist)
+[projectionsit]: https://github.com/tpope/vim-projectionist
 
 Introduction
 ============
@@ -36,6 +36,8 @@ Dependencies
 ============
 
 This plugin has no depenencies, but can work with tpope's
+[projectionist]
+bleh
 [projectionsit](https://github.com/tpope/vim-projectionist) plugin.
 
 Setup
