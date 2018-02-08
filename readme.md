@@ -36,14 +36,14 @@ Dependencies
 ============
 
 This plugin has no depenencies, but can work with tpope's
-[projectionsit] plugin.
+[projectionsit](https://github.com/tpope/vim-projectionist) plugin.
 
 Setup
 =====
 
 Neopipe has three variables that can be defined at the buffer or global level,
 or as part of a projection from tpope's
-[projectionsit] plugin. The three
+[projectionsit](https://github.com/tpope/vim-projectionist) plugin. The three
 variables are: neopipe\_start, neopipe\_command, and neopipe\_ft.
 
 neopipe\_start
