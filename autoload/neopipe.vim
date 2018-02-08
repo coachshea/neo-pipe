@@ -7,10 +7,12 @@ let g:neopipe_auto = 1
 function! neopipe#pipe(type)
 
   if !exists('b:child') || !buflisted(b:child)
-    vnew
+    let l:bufname = bufname( '%' ) . ' [VimPipe]'
+    let l:neopipe_buffer = bufnr(l:bufname, 1)
+    exe g:neopipe_split . 'sbuffer ' . l:neopipe_buffer
     let l:child = bufnr('%')
     wincmd p
-    let b:child = l:child
+    let b:child = l:neopipe_buffer
   endif
 
   let l:sel_save = &selection
