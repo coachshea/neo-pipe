@@ -6,11 +6,10 @@ let g:neopipe_auto = 1
 
 function! neopipe#pipe(type)
 
-  if !exists('b:child') || !bufexists(b:child)
-    let l:parent = bufnr('%')
-    vsplit new
+  if !exists('b:child') || !buflisted(b:child)
+    vnew
     let l:child = bufnr('%')
-    exe l:parent . 'wincmd'
+    wincmd p
     let b:child = l:child
   endif
 
