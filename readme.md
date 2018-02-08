@@ -29,5 +29,21 @@ Usage
 Mappings
 ========
 
+This plugin provides the following mappings:
+
+```vim
+<Plug>(neopipe-operator)
+<Plug>(neopipe-visual)
+<Plug>(neopipe-line)
+```
+
+By default these will be mapped to:
+
+```vim
+nmap ,t <Plug>(neopipe-operator)
+nmap ,t <Plug>(neopipe-visual)
+nmap ,tt <Plug>(neopipe-line)
+```
+
 Summary
 =======
