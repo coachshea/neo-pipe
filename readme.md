@@ -48,14 +48,25 @@ variables are: neopipe\_start, neopipe\_command, and neopipe\_ft.
 neopipe\_start
 --------------
 
-This variable if optional and if not set, this step wil be skipped. Let's say,
-for example, that we are woring on a mongo database. We could simply define
-a command such as 'mongo db/clients' and pipe all of our text through that.
-However, we also might want to run 'mongo' once and then run the rest of our
-commands through a running instance of mongo.
+This variable if optional and if not set, this step will be skipped. Let's
+say, for example, that we are working on a mongo database. We could simply
+define a command such as 'mongo db/clients' and pipe all our text through
+that. However, we also might want to run 'mongo' once and then run the rest of
+our commands through a running instance of mongo. The start command allows us to
+run a specified command the first time (per buffer) that we run a pipe command.
+If for some reason we want to close the scratch buffer and restart, the
+<Plug>(neopipe-close) mapping is provided.
+
+```vim
+let b:neopipe_start='mongo'
+au filetype sql let b:neopipe_start='mysql'
+```
 
 neopipe\_command
 ----------------
+
+This is the command that are text will be run through each time we execute a
+pipe command.
 
 neopipe\_ft
 -----------
@@ -64,6 +75,12 @@ This command simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
 
+```Javascript
+{
+  "name": "john"
+}
+```
+
 Mappings
 ========
 
@@ -71,8 +88,9 @@ This plugin provides the following mappings:
 
 ```vim
 <Plug>(neopipe-operator)
-<Plug>(neopipe-visual)
 <Plug>(neopipe-line)
+<Plug>(neopipe-close)
+<Plug>(neopipe-visual)
 ```
 
 As expected, the "operator" mapping leaves the user in operator-pending mode
@@ -83,6 +101,7 @@ line. By default these will be mapped to:
 ```vim
 nmap ,t <Plug>(neopipe-operator)
 nmap ,tt <Plug>(neopipe-line)
+nmap ,tq <Plug>(neopipe-close)
 vmap ,t <Plug>(neopipe-visual)
 ```
 
