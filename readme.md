@@ -5,7 +5,7 @@
                     |_| \_|_____\___/|_|  |___|_|   |_____|
                                                            
 
-# NEO-PIPE
+# Neo-Pipe
 
 ## Table of Contents
 
