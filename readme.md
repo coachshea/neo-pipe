@@ -20,8 +20,10 @@ Table of Contents
 Purpose
 =======
 
-The purpsoe of this plugin is to allow user to send selected text through an
-external command and display the output in a scratch buffer.
+The purpsoe of this plugin is to allow the user to send text through an
+external command and display the output in a scratch buffer. Mappings are
+defined which can take an operator, work on a visual selection, or work on a
+line.
 
 Usage
 =====
@@ -48,7 +50,7 @@ nmap ,tt <Plug>(neopipe-line)
 If this is not desired simply include the following in your init.vim:
 
 ```vim
-let g:neopipe_do_no_mappings=0
+let g:neopipe_do_no_mappings=1
 ```
 
 Summary
