@@ -45,5 +45,11 @@ nmap ,t <Plug>(neopipe-visual)
 nmap ,tt <Plug>(neopipe-line)
 ```
 
+If this is not desired simply include the following in your init.vim:
+
+```vim
+let g:neopipe_do_no_mappings=0
+```
+
 Summary
 =======
