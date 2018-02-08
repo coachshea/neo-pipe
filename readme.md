@@ -22,6 +22,8 @@ Table of Contents
 
 <!-- vim-markdown-toc -->
 
+[projectionsit]: (https://github.com/tpope/vim-projectionist)
+
 Introduction
 ============
 
@@ -34,14 +36,14 @@ Dependencies
 ============
 
 This plugin has no depenencies, but can work with tpope's
-[projectionsit](https://github.com/tpope/vim-projectionist) plugin.
+[projectionsit] plugin.
 
 Setup
 =====
 
 Neopipe has three variables that can be defined at the buffer or global level,
 or as part of a projection from tpope's
-[projectionsit](https://github.com/tpope/vim-projectionist) plugin. The three
+[projectionsit] plugin. The three
 variables are: neopipe\_start, neopipe\_command, and neopipe\_ft.
 
 neopipe\_start
@@ -62,18 +64,6 @@ neopipe\_ft
 This command simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
-
-```
-{
-  "name": "john"
-}
-```
-
-```js
-{
-  "name": "john"
-}
-```
 
 Mappings
 ========
