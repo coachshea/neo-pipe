@@ -69,7 +69,7 @@ have json syntax highlighting.
 }
 ```
 
-```json
+```javascript
 {
   "name": "john"
 }
