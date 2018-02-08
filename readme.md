@@ -17,6 +17,7 @@ Table of Contents
   * [neopipe\_start](#neopipe_start)
   * [neopipe\_command](#neopipe_command)
   * [neopipe\_ft](#neopipe_ft)
+* [Projections](#projections)
 * [Mappings](#mappings)
 * [Summary](#summary)
 
@@ -58,7 +59,7 @@ If for some reason we want to close the scratch buffer and restart, the
 <Plug>(neopipe-close) mapping is provided.
 
 ```vim
-let b:neopipe_start='mongo'
+let g:neopipe_start='mongo'
 au filetype sql let b:neopipe_start='mysql'
 ```
 
@@ -78,6 +79,51 @@ have json syntax highlighting.
 ```Javascript
 {
   "name": "john"
+}
+```
+
+Projections
+===========
+
+As mentioned previously, this plugin has been specifically designed to integrate
+smoothly with the [projectionist] plugin.
+
+```Javascript
+// compile livescript
+"*.ls": {
+  "neopipe_command": "lsc -cbp",
+  "neopipe_ft": "javascript"
+}
+
+// compile jade to javascript
+"src/*.jade": {
+  "neopipe_command": "jade -c",
+  "neopipe_ft": "javascript"
+}
+
+// compile jade to html
+"views/*.jade": {
+  "neopipe_command": "jade -P",
+  "neopipe_ft": "html"
+}
+
+// connect to a mongodb instance
+"*.mongo": {
+  "neopipe_command": "mongo db/test.db",
+  "neopipe_ft": "javascript"
+}
+
+// connect to a mongodb instance with livescript
+"*.mongo": {
+  "neoppipe_start": "mongo",
+  "neopipe_command": "lsc -cpb",
+  "neopipe_ft": "javascript"
+}
+
+// view assembly for c files
+"*.c": {
+  "neopipe_command": "gcc -S -xc -c -o - -",
+  "neopipe_ft": "asm"
 }
 ```
 
