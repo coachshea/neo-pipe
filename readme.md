@@ -36,7 +36,7 @@ Dependencies
 ============
 
 This plugin has no depenencies, but can work with tpope's
-[projectionist]
+[projectionsit]
 bleh
 [projectionsit](https://github.com/tpope/vim-projectionist) plugin.
 
