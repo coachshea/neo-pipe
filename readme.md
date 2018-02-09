@@ -14,14 +14,14 @@ Table of Contents
 * [Introduction](#introduction)
 * [Dependencies](#dependencies)
 * [Setup](#setup)
-  * [neopipe\_start](#neopipe_start)
-  * [neopipe\_command](#neopipe_command)
-  * [neopipe\_ft](#neopipe_ft)
+  * [npipe\_com](#npipe_com)
+  * [npipe\_ft](#npipe_ft)
 * [Projections](#projections)
 * [Mappings](#mappings)
 * [Summary](#summary)
 
 <!-- vim-markdown-toc -->
+
 
 [projectionist]: https://github.com/tpope/vim-projectionist
 
@@ -29,7 +29,7 @@ Introduction
 ============
 
 The purpose of this plugin is to allow the user to send text through an
-external command and display the output in a scratch buffer. Mappings are
+external com and display the output in a scratch buffer. Mappings are
 defined which can take an operator, work on a visual selection, or work on a
 line.
 
@@ -42,37 +42,20 @@ plugin.
 Setup
 =====
 
-Neopipe has three variables that can be defined at the buffer or global level,
-or as part of a projection from tpope's [projectionist] plugin. The three
-variables are: neopipe\_start, neopipe\_command, and neopipe\_ft.
+Neopipe has two variables that can be defined at the buffer or global level,
+or as part of a projection from tpope's [projectionist] plugin. The variables
+are: npipe\_com and npipe\_ft.
 
-neopipe\_start
---------------
-
-This variable if optional and if not set, this step will be skipped. Let's
-say, for example, that we are working on a mongo database. We could simply
-define a command such as 'mongo db/clients' and pipe all our text through
-that. However, we also might want to run 'mongo' once and then run the rest of
-our commands through a running instance of mongo. The start command allows us to
-run a specified command the first time (per buffer) that we run a pipe command.
-If for some reason we want to close the scratch buffer and restart, the
-<Plug>(neopipe-close) mapping is provided.
-
-```vim
-let g:neopipe_start='mongo'
-au filetype sql let b:neopipe_start='mysql'
-```
-
-neopipe\_command
+npipe\_com
 ----------------
 
-This is the command that are text will be run through each time we execute a
-pipe command.
+This is the com that are text will be run through each time we execute a
+pipe com.
 
-neopipe\_ft
+npipe\_ft
 -----------
 
-This command simply sets the filetype of the output. For example, if we are
+This com simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
 
@@ -91,39 +74,33 @@ smoothly with the [projectionist] plugin.
 ```Javascript
 // compile livescript
 "*.ls": {
-  "neopipe_command": "lsc -cbp",
-  "neopipe_ft": "javascript"
+  "npipe_com": "lsc -cbp",
+  "npipe_ft": "javascript"
 }
 
-// compile jade to javascript
-"src/*.jade": {
-  "neopipe_command": "jade -c",
-  "neopipe_ft": "javascript"
+//compile pug to html
+"templates/*.pug": {
+  "npipe_com": "pug",
+  "npipe_ft": "html"
 }
 
-// compile jade to html
-"views/*.jade": {
-  "neopipe_command": "jade -P",
-  "neopipe_ft": "html"
-}
-
-// connect to a mongodb instance
-"*.mongo": {
-  "neopipe_command": "mongo db/test.db",
-  "neopipe_ft": "javascript"
+// compile pug to javascript
+"src/*.pug": {
+  "npipe_com": "pug -c",
+  "npipe_ft": "javascript"
 }
 
 // connect to a mongodb instance with livescript
 "*.mongo": {
   "neoppipe_start": "mongo",
-  "neopipe_command": "lsc -cpb",
-  "neopipe_ft": "javascript"
+  "npipe_com": "lsc -cpb",
+  "npipe_ft": "javascript"
 }
 
 // view assembly for c files
 "*.c": {
-  "neopipe_command": "gcc -S -xc -c -o - -",
-  "neopipe_ft": "asm"
+  "npipe_com": "gcc -S -xc -c -o - -",
+  "npipe_ft": "asm"
 }
 ```
 
@@ -133,22 +110,22 @@ Mappings
 This plugin provides the following mappings:
 
 ```vim
-<Plug>(neopipe-operator)
-<Plug>(neopipe-line)
-<Plug>(neopipe-close)
-<Plug>(neopipe-visual)
+<Plug>(npipe-operator)
+<Plug>(npipe-line)
+<Plug>(npipe-close)
+<Plug>(npipe-visual)
 ```
 
 As expected, the "operator" mapping leaves the user in operator-pending mode
-and sends the results of the operator to the command. The "visual" mapping
+and sends the results of the operator to the com. The "visual" mapping
 sends the viusally selected text, and the "line" mapping send the current
 line. By default these will be mapped to:
 
 ```vim
-nmap ,t <Plug>(neopipe-operator)
-nmap ,tt <Plug>(neopipe-line)
-nmap ,tq <Plug>(neopipe-close)
-vmap ,t <Plug>(neopipe-visual)
+nmap ,t <Plug>(npipe-operator)
+nmap ,tt <Plug>(npipe-line)
+nmap ,tq <Plug>(npipe-close)
+vmap ,t <Plug>(npipe-visual)
 ```
 
 If this is not desired simply include the following in your init.vim:
