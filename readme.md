@@ -16,6 +16,7 @@ Table of Contents
 * [Setup](#setup)
   * [npipe\_com](#npipe_com)
   * [npipe\_ft](#npipe_ft)
+  * [Output Window](#output-window)
 * [Projections](#projections)
 * [Mappings](#mappings)
 * [Summary](#summary)
@@ -65,6 +66,20 @@ have json syntax highlighting.
 }
 ```
 
+Output Window
+-------------
+
+By default, the output window will be shown in a vertically split window. The
+can be changed by setting the npipe\_split option. As with all options, this can
+be set on the buffer or global levels, or through a projection. The option can
+be either 'new', 'vnew' (default), or 'tabedit'. It's hard to imagine a use case
+for 'tabedit', but it available.
+
+```vim
+let g:npipe_split = 'new' "default 'vnew'
+au filetype vim let b:npipe_split = 'vnew'
+```
+
 Projections
 ===========
 
@@ -75,7 +90,8 @@ smoothly with the [projectionist] plugin.
 // compile livescript
 "*.ls": {
   "npipe_com": "lsc -cbp",
-  "npipe_ft": "javascript"
+  "npipe_ft": "javascript",
+  "npipe_split": "new"
 }
 
 //compile pug to html
@@ -92,9 +108,9 @@ smoothly with the [projectionist] plugin.
 
 // connect to a mongodb instance with livescript
 "*.mongo": {
-  "neoppipe_start": "mongo",
   "npipe_com": "lsc -cpb",
-  "npipe_ft": "javascript"
+  "npipe_ft": "javascript",
+  "npipe_split": "vnew"
 }
 
 // view assembly for c files
