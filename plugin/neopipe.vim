@@ -9,7 +9,7 @@ nnoremap <plug>(neopipe-close) :<c-u>call neopipe#close()<cr>
 vnoremap <plug>(neopipe-visual) :<c-u>call neopipe#pipe(visualmode())<cr>
 
 if !exists('g:neopipe_split')
-  let g:neopipe_split = 'vert'
+  let g:neopipe_split = 'vnew'
 endif
 
 if !exists('g:neopipe_do_no_mappings')
