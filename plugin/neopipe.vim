@@ -8,6 +8,10 @@ nnoremap <plug>(neopipe-line) :<c-u>call neopipe#pipe(1)<cr>
 nnoremap <plug>(neopipe-close) :<c-u>call neopipe#close()<cr>
 vnoremap <plug>(neopipe-visual) :<c-u>call neopipe#pipe(visualmode())<cr>
 
+if !exists('g:neopipe_split')
+  let g:neopipe_split = 'vert'
+endif
+
 if !exists('g:neopipe_do_no_mappings')
   nmap ,t  <plug>(neopipe-operator)
   nmap ,tt <plug>(neopipe-line)

@@ -4,22 +4,19 @@ endif
 let g:neopipe_auto = 1
 
 function! s:buffer_setup()
-  " let l:bufname = bufname( '%' ) . ' [npipe]'
+  let l:bufname = bufname( '%' ) . ' [NeoPipe]'
   " let l:npipe_buffer = bufnr(l:bufname, 1)
-  " exe g:npipe_split . 'sbuffer ' . l:npipe_buffer
-  " exe 'vsplit sbuffer ' . l:npipe_buffer
-  vnew
+  " exe 'vert sbuffer ' . l:npipe_buffer
+  " exe g:neopipe_split
+  exe g:neopipe_split
   let l:npipe_buffer = bufnr('%')
+  exe 'file ' . l:bufname
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
   call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
   call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
   let l:child = bufnr('%')
   wincmd p
   let b:child = l:npipe_buffer
-endfunction
-
-function! s:find(var, def)
-  return get(b:, a:var, get(g:, a:var, a:def))
 endfunction
 
 function! s:find(var, def)
@@ -66,3 +63,4 @@ function! neopipe#close()
   exe b:child . 'bw!'
   unlet b:child
 endfunction
+
