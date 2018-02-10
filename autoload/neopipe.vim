@@ -14,14 +14,13 @@ function! s:buffer_setup()
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
   call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
   call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
-  let l:child = bufnr('%')
   wincmd p
   let b:child = l:npipe_buffer
 endfunction
 
 function! s:find(var, def)
   let l:var = get(b:, a:var, get(g:, a:var, a:def))
-  if empty(l:var)
+  if !len(l:var)
     let l:temp = projectionist#query_scalar(a:var)
     if !empty(l:temp)
       let l:var = l:temp[0]
@@ -63,4 +62,3 @@ function! neopipe#close()
   exe b:child . 'bw!'
   unlet b:child
 endfunction
-

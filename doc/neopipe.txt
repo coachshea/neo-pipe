@@ -70,14 +70,16 @@ the first line of the upward (start) search simply set
 pipe_search_start to 1. To discard the downward (end) match,
                   set pipe_search_end to -1.
 
-                  ===============================================================================
-                  COMMANDS                                        *neopipe-commands*
+===============================================================================
+COMMANDS                                        *neopipe-commands*
 
-                  VimPipe offers three commands.
+VimPipe offers three commands.
 
-                  *neopipe-Pipe-command*
+*neopipe-Pipe-command*
 
-Pipe                   Send the selected contents (entire buffer by defualt)
+Pipe
+
+Send the selected contents (entire buffer by defualt)
   through the command specified by |neopipe-pipe_command|
   and displays the results. The buffer does not need to be
   saved first.
@@ -92,17 +94,17 @@ Pipe                   Send the selected contents (entire buffer by defualt)
 
   PipeClose              Close the scratch buffer.
 
-  ===============================================================================
-  EXAMPLES                                         *neopipe-examples*
+===============================================================================
+EXAMPLES                                         *neopipe-examples*
 
-  The following are possible configurations. These can be set globally or on a
-  per-project bases:
+The following are possible configurations. These can be set globally or on a
+per-project bases:
 
-  // compile livescript
-  "*.ls": {
-    "pipe_com": "lsc -cbp",
-    "pipe_ft": "javascript"
-  }
+// compile livescript
+"*.ls": {
+  "pipe_com": "lsc -cbp",
+  "pipe_ft": "javascript"
+}
 
 // compile jade to javascript
 "src/*.jade": {
@@ -119,26 +121,26 @@ Pipe                   Send the selected contents (entire buffer by defualt)
 // connect to a mongodb instance
 "*.mongo": {
   "pipe_com": "mongo db/test.db",
-    "pipe_ft": "javascript"
+  "pipe_ft": "javascript"
 }
 
 // connect to a mongodb instance with livescript
 "*.mongo": {
   "pipe_com": "lsc -cpb | mongo",
-    "pipe_ft": "javascript"
+  "pipe_ft": "javascript"
 }
 
 // view assembly for c files
 "*.c": {
   "pipe_com": "gcc -S -xc -c -o - -",
-    "pipe_ft": "asm"
+  "pipe_ft": "asm"
 }
 
 // connect to a sqlite3 database with comments
 "db/*.sql": {
   "pipe_com": "sqlite2 ~/mydata.db",
-    "pip_search_start": "^\#"
-      "pipe_start_adjust": 1
+  "pip_search_start": "^\#",
+  "pipe_start_adjust": 1
 }
 
 ===============================================================================

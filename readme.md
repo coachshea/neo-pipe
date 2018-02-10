@@ -72,11 +72,11 @@ Output Window
 By default, the output window will be shown in a vertically split window. The
 can be changed by setting the npipe\_split option. As with all options, this can
 be set on the buffer or global levels, or through a projection. The option can
-be either 'new', 'vnew' (default), or 'tabedit'. It's hard to imagine a use case
-for 'tabedit', but it available.
+be either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use case
+for 'tabnew', but it is available.
 
 ```vim
-let g:npipe_split = 'new' "default 'vnew'
+let g:npipe_split = 'new'
 au filetype vim let b:npipe_split = 'vnew'
 ```
 
@@ -133,7 +133,7 @@ This plugin provides the following mappings:
 ```
 
 As expected, the "operator" mapping leaves the user in operator-pending mode
-and sends the results of the operator to the com. The "visual" mapping
+and sends the results of the operator to neopipe\_com. The "visual" mapping
 sends the viusally selected text, and the "line" mapping send the current
 line. By default these will be mapped to:
 
