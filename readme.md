@@ -60,7 +60,14 @@ This com simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
 
-```Javascript
+```JavaScript
+{
+  "name": "john"
+}
+```
+
+
+```JSON
 {
   "name": "john"
 }
