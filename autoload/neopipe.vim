@@ -5,9 +5,6 @@ let g:neopipe_auto = 1
 
 function! s:buffer_setup()
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  " let l:npipe_buffer = bufnr(l:bufname, 1)
-  " exe 'vert sbuffer ' . l:npipe_buffer
-  " exe g:neopipe_split
   exe g:neopipe_split
   let l:npipe_buffer = bufnr('%')
   exe 'file ' . l:bufname
@@ -18,17 +15,42 @@ function! s:buffer_setup()
   let b:child = l:npipe_buffer
 endfunction
 
+" function! s:find(var, def)
+"   let l:var = get(b:, a:var, get(g:, a:var, ''))
+"   if !len(l:var)
+"     let l:temp = projectionist#query_scalar(a:var)
+"     if !empty(l:temp)
+"       let l:var = l:temp[0]
+"     else
+"       let l:var = a:def
+"     endif
+"   endif
+"   return l:var
+" endfunction
+
 function! s:find(var, def)
-  let l:var = get(b:, a:var, get(g:, a:var, a:def))
-  if !len(l:var)
-    let l:temp = projectionist#query_scalar(a:var)
-    if !empty(l:temp)
-      let l:var = l:temp[0]
-    endif
+  let l:var = get(b:, a:var, get(g:, a:var, ''))
+  if len(l:var)
+    return l:var
   endif
-  return l:var
+  let l:temp = projectionist#query_scalar(a:var)
+  if !empty(l:temp)
+    return l:temp[0]
+  endif
+  return a:def
 endfunction
 
+function! s:find_start()
+  return s:find('npipe_start', &shell)
+endfunction
+
+function! s:find_ft()
+  return s:find('npipe_ft', '')
+endfunction
+
+function! s:find_com()
+  return s:find('npipe_com', '')
+endfunction
 
 function! neopipe#pipe(type)
 
