@@ -3,6 +3,7 @@ if exists('g:neopipe_auto')
 endif
 let g:neopipe_auto = 1
 
+" setup {{{
 function! s:buffer_setup()
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
   exe g:neopipe_split
@@ -16,27 +17,16 @@ function! s:buffer_setup()
   let b:child = l:npipe_buffer
 endfunction
 
-" function! s:find(var, def)
-"   let l:var = get(b:, a:var, get(g:, a:var, ''))
-"   if !len(l:var)
-"     let l:temp = projectionist#query_scalar(a:var)
-"     if !empty(l:temp)
-"       let l:var = l:temp[0]
-"     else
-"       let l:var = a:def
-"     endif
-"   endif
-"   return l:var
-" endfunction
-
 function! s:find(var, def)
   let l:var = get(b:, a:var, get(g:, a:var, ''))
   if len(l:var)
     return l:var
   endif
-  let l:temp = projectionist#query_scalar(a:var)
-  if !empty(l:temp)
-    return l:temp[0]
+  if exists('b:projectionist')
+    let l:temp = projectionist#query_scalar(a:var)
+    if !empty(l:temp)
+      return l:temp[0]
+    endif
   endif
   return a:def
 endfunction
@@ -52,23 +42,36 @@ endfunction
 function! s:find_com()
   return s:find('npipe_com', '')
 endfunction
+"}}}
 
+" job {{{
 function! s:stdout(id, data, event)
-  echom a:data
+  echom a:id . join(a:data) . a:event
+  " call nvim_buf_set_lines(b:child, 0, -1, 0, join(a:data))
 endfunction
 
 function! s:stderr(id, data, event)
-  echom printf('error!! id: %d; data: %s', a:id, a:data)
+  echom a:id . join(a:data) . a:event
+  " echom printf('error!! id: %d; data: %s', a:id, a:data)
 endfunction
 
 function! s:exit(id, data, event)
-  echom 'exited'
+  exe b:child . 'bw!'
+  unlet! b:child
+  unlet! b:job
 endfunction
+
+let s:callbacks = {
+      \ 'on_stdout': function('s:stdout'),
+      \ 'on_stderr': function('s:stderr'),
+      \ 'on_exit': function('s:exit')
+      \ }
 
 function! s:shell()
   let l:start = s:find_start()
-  let b:job = jobstart(l:start, )
+  let b:job = jobstart(l:start, s:callbacks)
 endfunction
+"}}}
 
 function! neopipe#pipe(type)
 
@@ -96,14 +99,14 @@ function! neopipe#pipe(type)
     normal! yy
   endif
 
-  call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
+  call jobsend(b:job, @@)
+  " call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
 
   let &selection = l:sel_save
   let @@ = l:saved_unnamed_register
 endfunction
 
 function! neopipe#close()
-  exe b:child . 'bw!'
-  unlet! b:child
-  unlet! b:job
+  call jobstop(b:job)
 endfunction
+" vim: foldmethod=marker:
