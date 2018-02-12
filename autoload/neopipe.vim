@@ -47,7 +47,7 @@ endfunction
 " job {{{
 function! s:stdout(id, data, event)
   echom a:id . join(a:data) . a:event
-  " call nvim_buf_set_lines(b:child, 0, -1, 0, join(a:data))
+  call nvim_buf_set_lines(b:child, 0, -1, 0, a:data)
 endfunction
 
 function! s:stderr(id, data, event)
