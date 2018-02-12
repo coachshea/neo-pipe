@@ -11,6 +11,7 @@ function! s:buffer_setup()
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
   call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
   call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
+  call setbufvar(l:npipe_buffer, '&ft', s:find_ft())
   wincmd p
   let b:child = l:npipe_buffer
 endfunction
@@ -52,10 +53,31 @@ function! s:find_com()
   return s:find('npipe_com', '')
 endfunction
 
+function! s:stdout(id, data, event)
+  echom a:data
+endfunction
+
+function! s:stderr(id, data, event)
+  echom printf('error!! id: %d; data: %s', a:id, a:data)
+endfunction
+
+function! s:exit(id, data, event)
+  echom 'exited'
+endfunction
+
+function! s:shell()
+  let l:start = s:find_start()
+  let b:job = jobstart(l:start, )
+endfunction
+
 function! neopipe#pipe(type)
 
   if !exists('b:child') || !buflisted(b:child)
     call s:buffer_setup()
+  endif
+
+  if !exists('b:job')
+    call s:shell()
   endif
 
   let l:sel_save = &selection
@@ -82,5 +104,6 @@ endfunction
 
 function! neopipe#close()
   exe b:child . 'bw!'
-  unlet b:child
+  unlet! b:child
+  unlet! b:job
 endfunction
