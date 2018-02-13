@@ -5,6 +5,6 @@
   },
   "*.sql": {
     "type": "sql",
-    "npipe_start": "sqlite3"
+    "npipe_start": "sqlite3 ~/data.db"
   }
 }
