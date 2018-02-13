@@ -30,9 +30,10 @@ Introduction
 ============
 
 The purpose of this plugin is to allow the user to send text through an
-external com and display the output in a scratch buffer. Mappings are
+external command and display the output in a scratch buffer. Mappings are
 defined which can take an operator, work on a visual selection, or work on a
-line.
+line. This allows you to work in an ordinary vim buffer and use it as a repl,
+make changes to a database, etc.
 
 Dependencies
 ============
@@ -47,11 +48,20 @@ Neopipe has two variables that can be defined at the buffer or global level,
 or as part of a projection from tpope's [projectionist] plugin. The variables
 are: npipe\_com and npipe\_ft.
 
-npipe\_com
+npipe\_start
 ----------------
 
-This is the com that are text will be run through each time we execute a
-pipe com.
+This is the command that will be run on the first invocation (per buffer) of
+the pipe comman. This can be as simple as a shell (i.e. "sh", "bash", "zsh",
+etc.) which all subsesquent invocations will be run through. Or, it could
+start a long running program that will be used to interpret all further commands
+(i.e. "mongo", "sqlite3", "node", etc). As with all NeoPipe variables, this can
+be set at the buffer or global levels, or set through a projection.
+
+```vim
+let g:npipe_start = 'zsh'
+au filetype sql let b:npipe_start = 'sqlite3 ~/db/myDatabase.db'
+```
 
 npipe\_ft
 -----------
@@ -60,7 +70,7 @@ This com simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
 
-```JSON
+```javascript
 {
   "name": "john"
 }
