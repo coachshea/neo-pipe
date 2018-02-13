@@ -1,0 +1,7 @@
+---
+'*.mongo':
+  type: mongo
+  npipe_start: 'mongo'
+'*.sql':
+  type: sql
+  npipe_start: 'sqlite3'
