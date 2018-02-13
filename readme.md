@@ -51,12 +51,13 @@ are: npipe\_com and npipe\_ft.
 npipe\_start
 ----------------
 
-This is the command that will be run on the first invocation (per buffer) of
-the pipe comman. This can be as simple as a shell (i.e. "sh", "bash", "zsh",
-etc.) which all subsesquent invocations will be run through. Or, it could
-start a long running program that will be used to interpret all further commands
-(i.e. "mongo", "sqlite3", "node", etc). As with all NeoPipe variables, this can
-be set at the buffer or global levels, or set through a projection.
+This is the command that will be run on the first invocation (per buffer)
+of the pipe comman. This can be as simple as a shell (i.e. "sh", "bash",
+"zsh", etc.) which all subsesquent invocations will be run through. Or,
+it could start a long running program that will be used to interpret all
+further commands (i.e. "mongo", "sqlite3", "node", etc). As with all NeoPipe
+variables, this can be set at the buffer or global levels, or set through a
+[projection](#projections).
 
 ```vim
 let g:npipe_start = 'zsh'
