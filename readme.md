@@ -55,9 +55,12 @@ This is the command that will be run on the first invocation (per buffer)
 of the pipe comman. This can be as simple as a shell (i.e. "sh", "bash",
 "zsh", etc.) which all subsesquent invocations will be run through. Or,
 it could start a long running program that will be used to interpret all
-further commands (i.e. "mongo", "sqlite3", "node", etc). As with all NeoPipe
-variables, this can be set at the buffer or global levels, or set through a
-[projection](#projections).
+further commands (i.e. "mongo", "sqlite3", "node", etc). Whatever the value
+of npipe\_start, that value will be passed to the jobstart() function. All
+subsequent commands will be sent to this command through the jobsend()
+function. The default value for this command is the value of &shell. As with
+all NeoPipe variables, this can be set at the buffer or global levels, or set
+through a [projection](#projections).
 
 ```vim
 let g:npipe_start = 'zsh'
@@ -91,6 +94,15 @@ let g:npipe_split = 'new'
 au filetype vim let b:npipe_split = 'vnew'
 ```
 
+It is also possible to specify a height or width by supplying a number to the
+split or vsplit (respectively) command. The default value of "vnew" will split
+the window equally.
+
+```vim
+let g:npipe_split = '40vnew'
+au filetype coffee let b:npipe_split = '25new'
+```
+
 Projections
 ===========
 
@@ -102,7 +114,7 @@ smoothly with the [projectionist] plugin.
 "*.ls": {
   "npipe_com": "lsc -cbp",
   "npipe_ft": "javascript",
-  "npipe_split": "new"
+  "npipe_split": "30new"
 }
 
 //compile pug to html
@@ -121,7 +133,7 @@ smoothly with the [projectionist] plugin.
 "*.mongo": {
   "npipe_com": "lsc -cpb",
   "npipe_ft": "javascript",
-  "npipe_split": "vnew"
+  "npipe_split": "50vnew"
 }
 
 // view assembly for c files
