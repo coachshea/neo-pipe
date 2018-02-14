@@ -12,36 +12,28 @@ function! s:buffer_setup()
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
   call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
   call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
-  call setbufvar(l:npipe_buffer, '&ft', s:find_ft())
+  call setbufvar(l:npipe_buffer, '&ft', s:find('npipe_ft', ''))
   wincmd p
   let b:child = l:npipe_buffer
 endfunction
 
 function! s:find(var, def)
+  echom a:var
   let l:var = get(b:, a:var, get(g:, a:var, ''))
   if len(l:var)
     return l:var
   endif
   if exists('b:projectionist')
     let l:temp = projectionist#query_scalar(a:var)
+    echom string(l:temp)
     if !empty(l:temp)
+      echom 'projection: ' . l:temp[0]
       return l:temp[0]
     endif
   endif
   return a:def
 endfunction
 
-function! s:find_start()
-  return s:find('npipe_start', &shell)
-endfunction
-
-function! s:find_ft()
-  return s:find('npipe_ft', '')
-endfunction
-
-function! s:find_com()
-  return s:find('npipe_com', '')
-endfunction
 "}}}
 
 " job {{{
@@ -68,7 +60,7 @@ let s:callbacks = {
       \ }
 
 function! s:shell()
-  let l:start = s:find_start()
+  let l:start = s:find('npipe_start', &shell)
   let b:job = jobstart(l:start, s:callbacks)
 endfunction
 "}}}
