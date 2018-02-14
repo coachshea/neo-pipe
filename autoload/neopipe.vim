@@ -5,6 +5,7 @@ let g:neopipe_auto = 1
 
 " setup {{{
 function! s:buffer_setup()
+  let l:buf_ft = s:find('npipe_ft', '')
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
   exe g:neopipe_split
   let l:npipe_buffer = bufnr('%')
@@ -12,22 +13,20 @@ function! s:buffer_setup()
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
   call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
   call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
-  call setbufvar(l:npipe_buffer, '&ft', s:find('npipe_ft', ''))
+  call setbufvar(l:npipe_buffer, '&ft', l:buf_ft)
   wincmd p
   let b:child = l:npipe_buffer
 endfunction
 
 function! s:find(var, def)
-  echom a:var
   let l:var = get(b:, a:var, get(g:, a:var, ''))
   if len(l:var)
     return l:var
   endif
   if exists('b:projectionist')
     let l:temp = projectionist#query_scalar(a:var)
-    echom string(l:temp)
+    let l:qry = projectionist#query(a:var)
     if !empty(l:temp)
-      echom 'projection: ' . l:temp[0]
       return l:temp[0]
     endif
   endif
@@ -92,7 +91,6 @@ function! neopipe#pipe(type)
   endif
 
   call jobsend(b:job, @@)
-  " call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
 
   let &selection = l:sel_save
   let @@ = l:saved_unnamed_register
