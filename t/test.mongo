@@ -1,8 +1,10 @@
 db.users.insertOne(
   {
-    first_name: "joe",
-    last_name: "henry"
+    first_name: "mike",
+    last_name: "schmidt"
   }
 )
 
 db.users.find()
+
+db.users.find().sort({last_name: 1})
