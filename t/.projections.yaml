@@ -2,6 +2,7 @@
 '*.mongo':
   type: mongo
   npipe_start: 'mongo'
+  npipe_ft: 'javascript'
 '*.sql':
   type: sql
   npipe_start: 'sqlite3 ~/data.db'

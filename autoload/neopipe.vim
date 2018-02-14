@@ -52,7 +52,7 @@ endfunction
 
 function! s:stderr(id, data, event)
   echom a:id . join(a:data) . a:event
-  " echom printf('error!! id: %d; data: %s', a:id, a:data)
+  call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
 endfunction
 
 function! s:exit(id, data, event)

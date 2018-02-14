@@ -1,0 +1,8 @@
+db.users.insertOne(
+  {
+    first_name: "joe",
+    last_name: "henry"
+  }
+)
+
+db.users.find()

@@ -1,28 +1,37 @@
-DROP TABLE IF EXISTS players;
-create table players(
-  player_id          INTEGER   PRIMARY KEY   AUTOINCREMENT,
+DROP TABLE IF EXISTS player;
+CREATE TABLE player(
+  player_id   INTEGER   PRIMARY KEY   AUTOINCREMENT,
   first_name  TEXT      NOT NULL,
   last_name   TEXT      NOT NULL
 );
 
-DROP TABLE IF EXISTS position;
-create table position(
+DROP TABLE IF EXISTS macro;
+CREATE TABLE macro(
+  macro_id    INTEGER   PRIMARY KEY   AUTOINCREMENT,
+  macro_name  TEXT      NOT NULL
+);
+
+DROP TABLE IF EXISTS player_macro;
+CREATE TABLE player_macro(
   player_id  INTEGER,
-  position   TEXT      NOT NULL
-  FOREIGN KEY(player_id) references(player(player_id))
+  macro_id  INTEGER,
+  FOREIGN key(player_id) REFERENCES player(player_id) ,
+  FOREIGN KEY(macro_id) REFERENCES macro(macro_id)
 );
 
 .tables
 
+SELECT player_id,
+       last_name,
+       first_name
+FROM player;
+
+INSERT INTO player(first_name, last_name)
+VALUES("fred", "masony");
+
+INSERT INTO player(first_name, last_name)
+VALUES("john", "shea");
+
 SELECT *
-FROM players;
-
-insert into player(first_name, last_name)
-values("fred", "masony");
-
-insert into player(first_name, last_name)
-values("john", "shea");
-
-SELECT *
-FROM players
+FROM player
 ORDER BY last_name;
