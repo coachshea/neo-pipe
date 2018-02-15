@@ -198,7 +198,7 @@ let g:neopipe_do_no_mappings=1
 ```
 
 **important note about <Plug>(npipe-whole)**
-In order to keep your cursor position, <Plug>(npipe-whole) use the 'q' mark
+In order to keep your cursor position, \<Plug>(npipe-whole) use the 'q' mark
 (i.e. mq) before copying and piping the entire buffer. It then returns the
 cursor with '`q'.
 
