@@ -47,7 +47,7 @@ Setup
 
 Neopipe allows users to interact in with their commands in one of two ways.
 First, users can define a long running command through which all subsqquent test
-will be piped through (defined as ). This can be as simple as a shell command or it could open
+will be piped through (defined as [npipe\_start]). This can be as simple as a shell command or it could open
 a database, a repl, or any other command that the user wants to keep running for
 the duration of the session. Behind the scenes, this uses Neovim's jobstart
 function.
