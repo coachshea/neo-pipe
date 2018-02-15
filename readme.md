@@ -25,6 +25,7 @@ Table of Contents
 
 
 [projectionist]: https://github.com/tpope/vim-projectionist
+[npipe_start]: #npipe_start
 
 Introduction
 ============
@@ -44,9 +45,19 @@ plugin.
 Setup
 =====
 
-Neopipe has two variables that can be defined at the buffer or global level,
-or as part of a projection from tpope's [projectionist] plugin. The variables
-are: npipe\_com and npipe\_ft.
+Neopipe allows users to interact in with their commands in one of two ways.
+First, users can define a long running command through which all subsqquent test
+will be piped through (defined as ). This can be as simple as a shell command or it could open
+a database, a repl, or any other command that the user wants to keep running for
+the duration of the session. Behind the scenes, this uses Neovim's jobstart
+function.
+
+The second option available to NeoPipe users is to define a command that will
+take the text as standard input and which rights it's output to standard out. In
+this case, the system command is used on each invocation of NeoPipe.
+
+Whichever method the user chooses, the output of the command will be sent to a
+scratch buffer.
 
 npipe\_start
 ----------------
@@ -155,18 +166,20 @@ This plugin provides the following mappings:
 ```vim
 <Plug>(npipe-operator)
 <Plug>(npipe-line)
+<Plug>(npipe-whole)
 <Plug>(npipe-close)
 <Plug>(npipe-visual)
 ```
 
 As expected, the "operator" mapping leaves the user in operator-pending mode
-and sends the results of the operator to neopipe\_com. The "visual" mapping
-sends the viusally selected text, and the "line" mapping send the current
-line. By default these will be mapped to:
+and sends the results to neopipe\_com. The "line" mapping sends the current
+line, the "whole" mapping send the entire file, and the "visual" mapping sends
+the viusally selected text. By default these will be mapped to:
 
 ```vim
 nmap ,t <Plug>(npipe-operator)
 nmap ,tt <Plug>(npipe-line)
+nmap ,tg <Plug>(npipe-whole)
 nmap ,tq <Plug>(npipe-close)
 vmap ,t <Plug>(npipe-visual)
 ```
