@@ -191,17 +191,18 @@ nmap ,tq <Plug>(npipe-close)
 vmap ,t <Plug>(npipe-visual)
 ```
 
+If this is not desired simply include the following in your init.vim:
+
+```vim
+let g:neopipe_do_no_mappings=1
+```
+
 **important note about <Plug>(npipe-whole)**
 In order to keep your cursor position, <Plug>(npipe-whole) use the 'q' mark
 (i.e. mq) before copying and piping the entire buffer. It then returns the
 cursor with '`q'.
 
 
-If this is not desired simply include the following in your init.vim:
-
-```vim
-let g:neopipe_do_no_mappings=1
-```
 
 Summary
 =======
