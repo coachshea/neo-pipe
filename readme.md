@@ -85,6 +85,13 @@ When NeoPipe users want to define a command that takes the chosen text through
 it's stdin and pipes it's result to stdout, they simply define the npipe\_com
 command.
 
+**important note**
+
+If neither npipe\_start nor npipe\_com are set, the text will simply be echoed
+in the scracth buffer. It is unlikley that a great many use cases exist for
+this behavior, save checking the functionality of user defined motions and
+text-objects.
+
 npipe\_ft
 -----------
 

@@ -46,17 +46,16 @@ function! s:stderr(id, data, event)
   call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
 endfunction
 
-function! s:exit(id, data, event)
-  exe b:child . 'bw!'
-  unlet! b:child
-  unlet! b:job
-  unlet! b:com
-endfunction
+" function! s:exit(id, data, event)
+"   exe b:child . 'bw!'
+"   unlet! b:child
+"   unlet! b:job
+"   unlet! b:com
+" endfunction
 
 let s:callbacks = {
       \ 'on_stdout': function('s:stdout'),
-      \ 'on_stderr': function('s:stderr'),
-      \ 'on_exit': function('s:exit')
+      \ 'on_stderr': function('s:stderr')
       \ }
 
 function! s:shell()
@@ -94,24 +93,26 @@ function! neopipe#pipe(type)
     normal! `[v`]y
   elseif a:type ==# 'line'
     normal! '[V']y
-  else
+  elseif a:type == 1
     normal! yy
+  elseif a:type == 2
+    normal! mqggVGy`q
   endif
 
   if exists('b:job')
     call jobsend(b:job, @@)
   elseif exists('b:com')
-    let l:lines = system(b:com, @@)
-    call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
-    " call nvim_buf_set_lines(b:child, 0, -1, 0, system(b:com, @@))
+    " let l:lines = systemlist(b:com, @@)
+    " call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
+    call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
   else
     call s:shell()
     if exists('b:job')
       call jobsend(b:job, @@)
     elseif exists('b:com')
-      let l:lines = system(b:com, @@)
-      call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
-      " call nvim_buf_set_lines(b:child, 0, -1, 0, system(b:com, @@))
+      " let l:lines = systemlist(b:com, @@)
+      " call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
+      call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
     else
       call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
     endif
@@ -122,10 +123,14 @@ function! neopipe#pipe(type)
 endfunction
 
 function! neopipe#close()
-  call jobstop(b:job)
   exe b:child . 'bw!'
   unlet! b:child
-  unlet! b:job
-  unlet! b:com
+  if exists('b:job')
+    call jobstop(b:job)
+    unlet! b:job
+  endif
+  if exists('b:com')
+    unlet! b:com
+  endif
 endfunction
 " vim: foldmethod=marker:

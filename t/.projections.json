@@ -4,8 +4,16 @@
     "npipe_start": "mongo",
     "npipe_ft": "javascript"
   },
+  "*.mongo.ls": {
+    "type": "mongols",
+    "npipe_com": "lsc -cbp | mongo"
+  },
   "*.sql": {
     "type": "sql",
     "npipe_start": "sqlite3 ~/data.db"
+  },
+  "*.c": {
+    "npipe_com": "gcc -S -xc -c -o - -",
+    "npipe_ft": "asm"
   }
 }
