@@ -95,8 +95,8 @@ au filetype vim let b:npipe_split = 'vnew'
 ```
 
 It is also possible to specify a height or width by supplying a number to the
-split or vsplit (respectively) command. The default value of "vnew" will split
-the window equally.
+split or vsplit (respectively) command. The default values of will split the
+window equally.
 
 ```vim
 let g:npipe_split = '40vnew'
@@ -107,7 +107,11 @@ Projections
 ===========
 
 As mentioned previously, this plugin has been specifically designed to integrate
-smoothly with the [projectionist] plugin.
+smoothly with the [projectionist] plugin. If you are not familiar with
+[projectionist], I stongly encourage you to give it a look. It allows for a
+simple and clean method of assigning values on a per-project (or global) basis.
+Using [projectionist] can save you from a lot of unneccessary autocommands
+designed to handle per-project requirements.
 
 ```Javascript
 // compile livescript
