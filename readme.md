@@ -53,7 +53,7 @@ the duration of the session. Behind the scenes, this uses Neovim's jobstart
 function.
 
 The second option available to NeoPipe users is to define a command that will
-take the text as standard input and which rights it's output to standard out. In
+take the text as stdin and which rights it's output to stdout. In
 this case, the system command is used on each invocation of NeoPipe.
 
 Whichever method the user chooses, the output of the command will be sent to a
@@ -78,10 +78,17 @@ let g:npipe_start = 'zsh'
 au filetype sql let b:npipe_start = 'sqlite3 ~/db/myDatabase.db'
 ```
 
+npipe\_com
+----------
+
+When NeoPipe users want to define a command that takes the chosen text through
+it's stdin and pipes it's result to stdout, they simply define the npipe\_com
+command.
+
 npipe\_ft
 -----------
 
-This com simply sets the filetype of the output. For example, if we are
+This command simply sets the filetype of the output. For example, if we are
 pumping text through a mongodb database, we would likely want the output to be
 have json syntax highlighting.
 
