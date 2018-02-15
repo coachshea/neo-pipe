@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS player_macro;
 CREATE TABLE player_macro(
   player_id  INTEGER,
   macro_id  INTEGER,
-  FOREIGN key(player_id) REFERENCES player(player_id) ,
+  FOREIGN KEY(player_id) REFERENCES player(player_id),
   FOREIGN KEY(macro_id) REFERENCES macro(macro_id)
 );
 
