@@ -6,6 +6,7 @@
 '*.mongo.ls':
   type: mongols
   npipe_com: 'lsc -cbp | mongo'
+  npipe_ft: 'javascript'
 '*.sql':
   type: sql
   npipe_start: 'sqlite3 ~/data.db'

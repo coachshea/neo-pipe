@@ -64,14 +64,14 @@ npipe\_start
 
 This is the command that will be run on the first invocation (per buffer)
 of the pipe comman. This can be as simple as a shell (i.e. "sh", "bash",
-"zsh", etc.) which all subsesquent invocations will be run through. Or,
-it could start a long running program that will be used to interpret all
-further commands (i.e. "mongo", "sqlite3", "node", etc). Whatever the value
-of npipe\_start, that value will be passed to the jobstart() function. All
-subsequent commands will be sent to this command through the jobsend()
-function. The default value for this command is the value of &shell. As with
-all NeoPipe variables, this can be set at the buffer or global levels, or set
-through a [projection](#projections).
+"zsh", etc.) which all ensuing invocations will be run through. Or, it could
+start a long running program that will be used to interpret all further
+commands (i.e. "mongo", "sqlite3", "node", etc). Whatever the value of
+npipe\_start, that value will be passed to the jobstart() function. All
+ensuing commands will be sent to this command through the jobsend() function.
+The default value for this command is the value of &shell. As with all NeoPipe
+variables, this can be set at the buffer or global levels, or set through a
+[projection](#projections).
 
 ```vim
 let g:npipe_start = 'zsh'
@@ -146,7 +146,13 @@ designed to handle per-project requirements.
   "npipe_split": "30new"
 }
 
-//compile pug to html
+// connect to a sqlite3 db
+"*.sql": {
+  "npipe_start": "sqlite3 ~/mydb.db",
+  "npipe_split": "new"
+}
+
+// compile pug to html
 "templates/*.pug": {
   "npipe_com": "pug",
   "npipe_ft": "html"
@@ -160,7 +166,7 @@ designed to handle per-project requirements.
 
 // connect to a mongodb instance with livescript
 "*.mongo": {
-  "npipe_com": "lsc -cpb",
+  "npipe_start": "lsc -cpb",
   "npipe_ft": "javascript",
   "npipe_split": "50vnew"
 }

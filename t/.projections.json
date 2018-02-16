@@ -6,7 +6,8 @@
   },
   "*.mongo.ls": {
     "type": "mongols",
-    "npipe_com": "lsc -cbp | mongo"
+    "npipe_com": "lsc -cbp | mongo",
+    "npipe_ft": "javascript"
   },
   "*.sql": {
     "type": "sql",

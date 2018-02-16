@@ -5,9 +5,9 @@ let g:neopipe_auto = 1
 
 " setup {{{
 function! s:buffer_setup()
-  let l:buf_ft = s:find('npipe_ft')
+  let l:buf_ft = s:find('npipe_ft', '')
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  exe g:neopipe_split
+  exe s:find('neopipe_split', 'vnew')
   let l:npipe_buffer = bufnr('%')
   exe 'file ' . l:bufname
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
@@ -18,56 +18,50 @@ function! s:buffer_setup()
   let b:child = l:npipe_buffer
 endfunction
 
-function! s:find(var)
-  let l:var = get(b:, a:var, get(g:, a:var, ''))
-  if len(l:var)
-    return l:var
-  endif
-  if exists('b:projectionist')
-    let l:temp = projectionist#query_scalar(a:var)
-    let l:qry = projectionist#query(a:var)
-    if !empty(l:temp)
-      return l:temp[0]
+function! s:find(var, def)
+  if exists('b:' . a:var)
+    echom 'b: ' . a:var
+    return get(b:, a:var)
+  elseif exists('b:projectionist')
+    let l:var = projectionist#query_scalar(a:var)
+    if !empty(l:var)
+      echom 'projection: ' . l:var[0]
+      return l:var[0]
     endif
+  elseif exists('g:' . a:var)
+    echom 'g: ' . a:var
+    return get(g:, a:var)
+  else
+    echom 'a:def ' . a:def
+    return a:def
   endif
-  return ''
 endfunction
-
 "}}}
 
 " job {{{
-function! s:stdout(id, data, event)
+function! s:out(id, data, event)
   echom a:id . join(a:data) . a:event
   call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
 endfunction
-
-function! s:stderr(id, data, event)
-  echom a:id . join(a:data) . a:event
-  call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
-endfunction
-
-" function! s:exit(id, data, event)
-"   exe b:child . 'bw!'
-"   unlet! b:child
-"   unlet! b:job
-"   unlet! b:com
-" endfunction
 
 let s:callbacks = {
-      \ 'on_stdout': function('s:stdout'),
-      \ 'on_stderr': function('s:stderr')
+      \ 'on_stdout': function('s:out'),
+      \ 'on_stderr': function('s:out')
       \ }
 
 function! s:shell()
-  let l:start = s:find('npipe_start')
+  let l:start = s:find('npipe_start', '')
   if len(l:start)
+    echom 'l:start: ' . l:start
     let b:job = jobstart(l:start, s:callbacks)
   else
-    let l:com = s:find('npipe_com')
+    let l:com = s:find('npipe_com', '')
     if len(l:com)
+      echom 'l:com: ' . l:com
       let b:com = l:com
     endif
   endif
+  echom 'nothing'
 endfunction
 "}}}
 
@@ -75,10 +69,6 @@ function! neopipe#pipe(type)
 
   if !exists('b:child') || !buflisted(b:child)
     call s:buffer_setup()
-  endif
-
-  if !exists('b:job') && !exists('b:com')
-    call s:shell()
   endif
 
   let l:sel_save = &selection
@@ -102,16 +92,12 @@ function! neopipe#pipe(type)
   if exists('b:job')
     call jobsend(b:job, @@)
   elseif exists('b:com')
-    " let l:lines = systemlist(b:com, @@)
-    " call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
     call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
   else
     call s:shell()
     if exists('b:job')
       call jobsend(b:job, @@)
     elseif exists('b:com')
-      " let l:lines = systemlist(b:com, @@)
-      " call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
       call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
     else
       call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
@@ -123,8 +109,10 @@ function! neopipe#pipe(type)
 endfunction
 
 function! neopipe#close()
-  exe b:child . 'bw!'
-  unlet! b:child
+  if exists('b:child')
+    exe b:child . 'bw!'
+    unlet! b:child
+  endif
   if exists('b:job')
     call jobstop(b:job)
     unlet! b:job
