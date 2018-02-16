@@ -19,6 +19,41 @@ function! s:buffer_setup()
   let b:child = l:npipe_buffer
 endfunction
 
+function! s:find_com()
+  let start = get(b:, 'npipe_start', '')
+  if l:start != ''
+    let b:job = l:start
+    return
+  endif
+  let l:com = get(b:, 'npipe_com', '')
+  if l:com != ''
+    let b:com = l:com
+    return
+  endif
+  if exists('b:projectionist')
+    let l:start = projectionist#query_scalar('npipe_start')
+    if !empty(l:start)
+      let b:job = l:start
+      return
+    endif
+    let l:com = projectionist#query_scalar('npipe_com')
+    if !empty(l:com)
+      let b:com = l:com
+      return
+    endif
+  endif
+  let l:start = get(g:, 'npipe_start')
+  if l:start != ''
+    let b:job = l:start
+    return
+  endif
+  let l:com = get(g:, 'npipe_com')
+  if l:com != ''
+    let b:com = l:com
+    return
+  endif
+endfunction
+
 function! s:find(var, def)
   let l:var = get(b:, a:var, '')
   if l:var != ''

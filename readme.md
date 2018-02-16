@@ -26,6 +26,8 @@ Table of Contents
 
 [projectionist]: https://github.com/tpope/vim-projectionist
 [npipe_start]: #npipe_start
+[npipe_com]: #npipe_com
+[npipe_ft]: #npipe_ft
 
 Introduction
 ============
@@ -40,17 +42,18 @@ Dependencies
 ============
 
 This plugin has no dependencies, but can work with tpope's [projectionist]
-plugin.
+plugin. If you are not familiar with [projectionist] I strongly encourage you to
+check it out. It excels at project-level configuration.
 
 Setup
 =====
 
 Neopipe allows users to interact in with their commands in one of two ways.
-First, users can define a long running command through which all subsqquent test
-will be piped through (defined as [npipe_start]). This can be as simple as a shell command or it could open
-a database, a repl, or any other command that the user wants to keep running for
-the duration of the session. Behind the scenes, this uses Neovim's jobstart
-function.
+First, users can define a long running command through which all subsqquent
+text will be piped (defined as [npipe_start]). This can be as simple as
+opening a shell command or it could open a database, a repl, or any other
+command that the user wants to keep running for the duration of the session.
+Behind the scenes, this uses Neovim's jobstart function.
 
 The second option available to NeoPipe users is to define a command that will
 take the text as stdin and which rights it's output to stdout. In
@@ -146,6 +149,12 @@ designed to handle per-project requirements.
   "npipe_split": "30new"
 }
 
+//connect to a mongodb database
+"*.mongo": {
+  "npipe_start": "mongo",
+  "npipe_ft": "javascript"
+}
+
 // connect to a sqlite3 db
 "*.sql": {
   "npipe_start": "sqlite3 ~/mydb.db",
@@ -165,8 +174,8 @@ designed to handle per-project requirements.
 }
 
 // connect to a mongodb instance with livescript
-"*.mongo": {
-  "npipe_start": "lsc -cpb",
+"*.mongo.ls": {
+  "npipe_com": "lsc -cpb | mongo",
   "npipe_ft": "javascript",
   "npipe_split": "50vnew"
 }
@@ -204,14 +213,15 @@ nmap ,tq <Plug>(npipe-close)
 vmap ,t <Plug>(npipe-visual)
 ```
 
-If this is not desired simply include the following in your init.vim:
+If this is not desired simply include the following in your init.vim **before
+leading NeoPipe**:
 
 ```vim
 let g:neopipe_do_no_mappings=1
 ```
 
-**important note about <Plug>(npipe-whole)**
-In order to keep your cursor position, \<Plug>(npipe-whole) use the 'q' mark
+**important note about <Plug>(npipe-whole):**
+In order to keep the cursor position, \<Plug>(npipe-whole) use the 'q' mark
 (i.e. mq) before copying and piping the entire buffer. It then returns the
 cursor with '`q'.
 
