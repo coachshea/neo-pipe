@@ -7,7 +7,6 @@ let g:neopipe_auto = 1
 function! s:buffer_setup()
   let l:buf_ft = s:find('npipe_ft', '')
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  echom 'split: ' . s:find('npipe_split', 'vnew')
   exe s:find('npipe_split', 'vnew')
   let l:npipe_buffer = bufnr('%')
   exe 'file ' . l:bufname
@@ -20,9 +19,9 @@ function! s:buffer_setup()
 endfunction
 
 function! s:find_com()
-  let start = get(b:, 'npipe_start', '')
+  let l:start = get(b:, 'npipe_start', '')
   if l:start != ''
-    let b:job = l:start
+    let b:job = jobstart(l:start, s:callbacks)
     return
   endif
   let l:com = get(b:, 'npipe_com', '')
@@ -33,18 +32,18 @@ function! s:find_com()
   if exists('b:projectionist')
     let l:start = projectionist#query_scalar('npipe_start')
     if !empty(l:start)
-      let b:job = l:start
+      let b:job = jobstart(l:start[0], s:callbacks)
       return
     endif
     let l:com = projectionist#query_scalar('npipe_com')
     if !empty(l:com)
-      let b:com = l:com
+      let b:com = l:com[0]
       return
     endif
   endif
   let l:start = get(g:, 'npipe_start')
   if l:start != ''
-    let b:job = l:start
+    let b:job = jobstart(l:start, s:callbacks)
     return
   endif
   let l:com = get(g:, 'npipe_com')
@@ -123,6 +122,17 @@ function! neopipe#pipe(type)
   elseif a:type == 2
     normal! mqggVGy`q
   endif
+
+  " if !exists('b:job') && !exists('b:com')
+  "   call s:shell()
+  " endif
+  " if exists('b:job')
+  "   call jobsend(b:job, @@)
+  " elseif exists('b:com')
+  "   call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
+  " else
+  "   call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
+  " endif
 
   if exists('b:job')
     call jobsend(b:job, @@)
