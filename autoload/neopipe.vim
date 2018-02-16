@@ -7,7 +7,8 @@ let g:neopipe_auto = 1
 function! s:buffer_setup()
   let l:buf_ft = s:find('npipe_ft', '')
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  exe s:find('neopipe_split', 'vnew')
+  echom 'split: ' . s:find('npipe_split', 'vnew')
+  exe s:find('npipe_split', 'vnew')
   let l:npipe_buffer = bufnr('%')
   exe 'file ' . l:bufname
   call setbufvar(l:npipe_buffer, '&swapfile', 0)
@@ -19,22 +20,21 @@ function! s:buffer_setup()
 endfunction
 
 function! s:find(var, def)
-  if exists('b:' . a:var)
-    echom 'b: ' . a:var
-    return get(b:, a:var)
-  elseif exists('b:projectionist')
+  let l:var = get(b:, a:var, '')
+  if l:var != ''
+    return l:var
+  endif
+  if exists('b:projectionist')
     let l:var = projectionist#query_scalar(a:var)
     if !empty(l:var)
-      echom 'projection: ' . l:var[0]
       return l:var[0]
     endif
-  elseif exists('g:' . a:var)
-    echom 'g: ' . a:var
-    return get(g:, a:var)
-  else
-    echom 'a:def ' . a:def
-    return a:def
   endif
+  let l:var = get(g:, a:var, '')
+  if l:var != ''
+    return l:var
+  endif
+  return a:def
 endfunction
 "}}}
 

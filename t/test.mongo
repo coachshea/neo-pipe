@@ -1,7 +1,7 @@
 db.users.insertOne(
   {
-    first_name: "gary",
-    last_name: "busy"
+    first_name: "jim",
+    last_name: "mahoney"
   }
 )
 

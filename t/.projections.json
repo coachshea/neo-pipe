@@ -11,7 +11,8 @@
   },
   "*.sql": {
     "type": "sql",
-    "npipe_start": "sqlite3 ~/data.db"
+    "npipe_start": "sqlite3 ~/data.db",
+    "npipe_split": "20new"
   },
   "*.c": {
     "npipe_com": "gcc -S -xc -c -o - -",
