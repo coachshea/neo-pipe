@@ -73,8 +73,24 @@ endfunction
 "}}}
 
 " job {{{
+" let s:data = []
+" function! s:out(id, data, event)
+"   echom 'a:data (start): ' . string(a:data)
+"   echom 's:data (start): ' .  string(s:data)
+"   echom 'last item: ' . a:data[-1]
+"   if a:data[-1] !=# ''
+"     let s:data += a:data
+"     echom 'a:data (mid): ' . string(a:data)
+"     echom 's:data (mid): ' . string(s:data)
+"   else
+"     echom 'success'
+"     let s:data += a:data
+"     call nvim_buf_set_lines(b:child, 0, -1, 0, s:data[:-2])
+"     let s:data = []
+"   endif
+" endfunction
+
 function! s:out(id, data, event)
-  echom a:id . join(a:data) . a:event
   call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
 endfunction
 
@@ -86,71 +102,63 @@ let s:callbacks = {
 function! s:shell()
   let l:start = s:find('npipe_start', '')
   if len(l:start)
-    echom 'l:start: ' . l:start
     let b:job = jobstart(l:start, s:callbacks)
   else
     let l:com = s:find('npipe_com', '')
     if len(l:com)
-      echom 'l:com: ' . l:com
       let b:com = l:com
     endif
   endif
-  echom 'nothing'
 endfunction
 "}}}
 
-function! neopipe#pipe(type)
+function! neopipe#pipe(first, last)
+
+  let l:lines = getline(a:first, a:last) + ['']
 
   if !exists('b:child') || !buflisted(b:child)
     call s:buffer_setup()
   endif
 
-  let l:sel_save = &selection
-  let &selection = 'inclusive'
-  let l:saved_unnamed_register = @@
-
-  if a:type ==# 'v'
-    normal! `<v`>y
-  elseif a:type ==# 'V'
-    normal! '<V'>y
-  elseif a:type ==# 'char'
-    normal! `[v`]y
-  elseif a:type ==# 'line'
-    normal! '[V']y
-  elseif a:type == 1
-    normal! yy
-  elseif a:type == 2
-    normal! mqggVGy`q
-  endif
-
-  " if !exists('b:job') && !exists('b:com')
-  "   call s:shell()
-  " endif
-  " if exists('b:job')
-  "   call jobsend(b:job, @@)
-  " elseif exists('b:com')
-  "   call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
-  " else
-  "   call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
-  " endif
-
   if exists('b:job')
-    call jobsend(b:job, @@)
+    call jobsend(b:job, l:lines)
   elseif exists('b:com')
-    call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
+    call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
   else
     call s:shell()
     if exists('b:job')
-      call jobsend(b:job, @@)
+      call jobsend(b:job, l:lines)
     elseif exists('b:com')
-      call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, @@))
+      call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
     else
-      call nvim_buf_set_lines(b:child, 0, -1, 0, split(@@, "\n"))
+      call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
     endif
   endif
 
-  let &selection = l:sel_save
-  let @@ = l:saved_unnamed_register
+endfunction
+
+function! neopipe#trial(first, last)
+  
+  let l:lines = getline(a:first, a:last)
+
+  if !exists('b:child') || !buflisted(b:child)
+    call s:buffer_setup()
+  endif
+
+  if !exists('b:com')
+    call s:find('com', '')
+  endif
+  if !exists('b:type')
+    call s:find('type', '')
+  endif
+  if b:type ==# 'job'
+    cal jobsend(b:job, l:lines)
+  elseif b:type ==# 'sys'
+    call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
+  else
+    call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
+  endif
+
 endfunction
 
 function! neopipe#close()
