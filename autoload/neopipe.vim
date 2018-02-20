@@ -18,44 +18,9 @@ function! s:buffer_setup()
   let b:child = l:npipe_buffer
 endfunction
 
-function! s:find_com()
-  let l:start = get(b:, 'npipe_start', '')
-  if l:start != ''
-    let b:job = jobstart(l:start, s:callbacks)
-    return
-  endif
-  let l:com = get(b:, 'npipe_com', '')
-  if l:com != ''
-    let b:com = l:com
-    return
-  endif
-  if exists('b:projectionist')
-    let l:start = projectionist#query_scalar('npipe_start')
-    if !empty(l:start)
-      let b:job = jobstart(l:start[0], s:callbacks)
-      return
-    endif
-    let l:com = projectionist#query_scalar('npipe_com')
-    if !empty(l:com)
-      let b:com = l:com[0]
-      return
-    endif
-  endif
-  let l:start = get(g:, 'npipe_start')
-  if l:start != ''
-    let b:job = jobstart(l:start, s:callbacks)
-    return
-  endif
-  let l:com = get(g:, 'npipe_com')
-  if l:com != ''
-    let b:com = l:com
-    return
-  endif
-endfunction
-
 function! s:find(var, def)
   let l:var = get(b:, a:var, '')
-  if l:var != ''
+  if l:var !=# ''
     return l:var
   endif
   if exists('b:projectionist')
@@ -65,30 +30,12 @@ function! s:find(var, def)
     endif
   endif
   let l:var = get(g:, a:var, '')
-  if l:var != ''
+  if l:var !=# ''
     return l:var
   endif
   return a:def
 endfunction
 "}}}
-
-" job {{{
-" let s:data = []
-" function! s:out(id, data, event)
-"   echom 'a:data (start): ' . string(a:data)
-"   echom 's:data (start): ' .  string(s:data)
-"   echom 'last item: ' . a:data[-1]
-"   if a:data[-1] !=# ''
-"     let s:data += a:data
-"     echom 'a:data (mid): ' . string(a:data)
-"     echom 's:data (mid): ' . string(s:data)
-"   else
-"     echom 'success'
-"     let s:data += a:data
-"     call nvim_buf_set_lines(b:child, 0, -1, 0, s:data[:-2])
-"     let s:data = []
-"   endif
-" endfunction
 
 function! s:out(id, data, event)
   call nvim_buf_set_lines(b:child, 0, -1, 0, a:data[:-2])
@@ -112,51 +59,67 @@ function! s:shell()
 endfunction
 "}}}
 
+" function! neopipe#pipe(first, last)
+
+"   let l:lines = getline(a:first, a:last) + ['']
+
+"   if !exists('b:child') || !buflisted(b:child)
+"     call s:buffer_setup()
+"   endif
+
+"   if exists('b:job')
+"     call jobsend(b:job, l:lines)
+"   elseif exists('b:com')
+"     call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
+"   else
+"     call s:shell()
+"     if exists('b:job')
+"       call jobsend(b:job, l:lines)
+"     elseif exists('b:com')
+"       call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
+"     else
+"       call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines[:-2])
+"     endif
+"   endif
+
+" endfunction
+
 function! neopipe#pipe(first, last)
 
+  echom 'entered'
+  
   let l:lines = getline(a:first, a:last) + ['']
 
+  echom 'lines' . string(l:lines)
+
   if !exists('b:child') || !buflisted(b:child)
     call s:buffer_setup()
   endif
 
-  if exists('b:job')
-    call jobsend(b:job, l:lines)
-  elseif exists('b:com')
-    call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
-  else
-    call s:shell()
-    if exists('b:job')
-      call jobsend(b:job, l:lines)
-    elseif exists('b:com')
-      call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
-    else
-      call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
+  echom 'buffer set'
+
+  if !exists('b:npipe_com')
+    let b:npipe_com = s:find('npipe_com', '')
+    echom 'b:com initialized: ' . b:npipe_com
+  endif
+   
+  if !exists('b:npipe_type')
+    let b:npipe_type = s:find('npipe_type', '')
+    echom 'b:type initialized: ' . b:npipe_type
+  endif
+
+  echom 'b:com: ' . b:npipe_com
+  echom 'b:type: ' . b:npipe_type
+   
+  if b:npipe_type ==# 'c'
+    if !exists(b:npipe_job)
+      let b:npipe_job = jobstart(b:npipe_com, s:callbacks)
     endif
-  endif
-
-endfunction
-
-function! neopipe#trial(first, last)
-  
-  let l:lines = getline(a:first, a:last)
-
-  if !exists('b:child') || !buflisted(b:child)
-    call s:buffer_setup()
-  endif
-
-  if !exists('b:com')
-    call s:find('com', '')
-  endif
-  if !exists('b:type')
-    call s:find('type', '')
-  endif
-  if b:type ==# 'job'
-    cal jobsend(b:job, l:lines)
-  elseif b:type ==# 'sys'
+    cal jobsend(b:npipe_job, l:lines)
+  elseif b:npipe_type ==# 's'
     call nvim_buf_set_lines(b:child, 0, -1, 0, systemlist(b:com, l:lines))
   else
-    call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines)
+    call nvim_buf_set_lines(b:child, 0, -1, 0, l:lines[:-2])
   endif
 
 endfunction
@@ -170,8 +133,18 @@ function! neopipe#close()
     call jobstop(b:job)
     unlet! b:job
   endif
+  if exists('b:npipe_job')
+    call jobstop(b:npipe_job)
+    unlet! b:npipe_job
+  endif
   if exists('b:com')
     unlet! b:com
+  endif
+  if exists('b:npipe_com')
+    unlet! b:npipe_com
+  endif
+  if exists('b:npipe_type')
+    unlet! b:npipe_type
   endif
 endfunction
 " vim: foldmethod=marker:

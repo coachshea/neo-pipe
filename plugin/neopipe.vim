@@ -3,16 +3,18 @@ if exists('g:neopipe_plug')
 endif
 let g:neopipe_plug = 1
 
-nnoremap <plug>(neopipe-operator) :set operatorfunc=neopipe#pipe<cr>g@
-nnoremap <plug>(neopipe-line) :<c-u>call neopipe#pipe(1)<cr>
-nnoremap <plug>(neopipe-whole) :<c-u>call neopipe#pipe(2)<cr>
-nnoremap <plug>(neopipe-close) :<c-u>call neopipe#close()<cr>
-vnoremap <plug>(neopipe-visual) :<c-u>call neopipe#pipe(visualmode())<cr>
+function! s:pipe(type)
+  '[, ']NeoPipe
+endfunction
+
+command! -range=% NeoPipe call neopipe#pipe(<line1>,<line2>)
+
+nnoremap <plug>(neopipe-operator) :set operatorfunc=<sid>pipe<cr>g@
 
 if !exists('g:neopipe_do_no_mappings')
-  nmap ,t  <plug>(neopipe-operator)
-  nmap ,tt <plug>(neopipe-line)
-  nmap ,tg <plug>(neopipe-whole)
-  nmap ,tq <plug>(neopipe-close)
-  vmap ,t <plug>(neopipe-visual)
+  nnoremap ,t  :set operatorfunc=<sid>pipe<cr>g@
+  nnoremap ,tt :.NeoPipe<cr>
+  nnoremap ,tg :NeoPipe<cr>
+  nnoremap ,tq :call neopipe#close()<cr>
+  xnoremap ,t :NeoPipe<cr>
 endif

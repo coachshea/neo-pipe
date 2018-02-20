@@ -2,15 +2,21 @@
 '*.mongo':
   type: mongo
   npipe_start: 'mongo'
+  npipe_com: 'mongo'
+  npipe_type: 'c'
   npipe_ft: 'javascript'
 '*.mongo.ls':
   type: mongols
   npipe_com: 'lsc -cbp | mongo'
+  npipe_type: 's'
   npipe_ft: 'javascript'
 '*.sql':
   type: sql
   npipe_start: 'sqlite3 ~/data.db'
+  npipe_com: 'sqlite3 ~/data.db'
+  npipe_type: 'c'
   npipe_split: '20new'
 "*.c":
   npipe_com: 'gcc -S -xc -c -o - -'
+  npipe_type: 's'
   npipe_ft: 'asm'
