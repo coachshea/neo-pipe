@@ -14,6 +14,10 @@ Table of Contents
 * [Introduction](#introduction)
 * [Dependencies](#dependencies)
 * [Setup](#setup)
+  * [Variables](#variables)
+    * [npipe\_type](#npipe_type)
+    * [npipe\_append](#npipe_append)
+  * [npipe\_start](#npipe_start)
   * [npipe\_com](#npipe_com)
   * [npipe\_ft](#npipe_ft)
   * [Output Window](#output-window)
@@ -23,11 +27,11 @@ Table of Contents
 
 <!-- vim-markdown-toc -->
 
-
 [projectionist]: https://github.com/tpope/vim-projectionist
 [npipe_start]: #npipe_start
 [npipe_com]: #npipe_com
 [npipe_ft]: #npipe_ft
+[projections]: $projections
 
 Introduction
 ============
@@ -48,7 +52,7 @@ check it out. It excels at project-level configuration.
 Setup
 =====
 
-Neopipe allows users to interact in with their commands in one of two ways.
+Neopipe allows users to interact with their commands in one of three ways.
 First, users can define a long running command through which all subsqquent
 text will be piped (defined as [npipe_start]). This can be as simple as
 opening a shell command or it could open a database, a repl, or any other
@@ -59,8 +63,35 @@ The second option available to NeoPipe users is to define a command that will
 take the text as stdin and which rights it's output to stdout. In
 this case, the system command is used on each invocation of NeoPipe.
 
+The third options is to simply echo the selected lines in the scratch buffer.
+This feature could come in handy if a user was testing a userdefined motion or
+text object and wanted to make sure that they correct text was being selected.
+
 Whichever method the user chooses, the output of the command will be sent to a
 scratch buffer.
+
+Variables
+---------
+
+All variables can be set at the buffer, projection (see [projectionist] by Tim
+Pope and the [projections] section of this document), or global level. NeoPipe
+will search for the variables in that order and apply the first one that it
+finds. The following are the available variables that collectively determine
+the behavior of NeoPipe.
+
+### npipe\_type
+
+NeoPipe's most fundamental command. This variable tells NeoPipe if the comman
+
+### npipe\_append
+
+This variable informs NeoPipe of whether the buffer should be cleared for each
+invocation, or to appand each subsequent write of the scratch buffer to the
+bottom of the buffer
+
+
+
+
 
 npipe\_start
 ----------------

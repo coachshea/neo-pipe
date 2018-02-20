@@ -1,24 +1,23 @@
 {
   "*.mongo": {
     "type": "mongo",
-    "npipe_start": "mongo --quiet",
-    "npipe_com": "mongo",
+    "npipe_com": "mongo --quiet",
     "npipe_type": "c",
     "npipe_ft": "javascript",
-    "npipe_append": 1
+    "npipe_append": "top"
   },
   "*.mongo.ls": {
     "type": "mongols",
     "npipe_com": "lsc -cbp | mongo",
     "npipe_type": "s",
-    "npipe_ft": "javascript"
+    "npipe_ft": "javascript",
+    "npipe_append": 0
   },
   "*.sql": {
     "type": "sql",
-    "npipe_start": "sqlite3 ~/data.db",
     "npipe_com": "sqlite3 ~/data.db",
     "npipe_type": "c",
-    "npipe_split": "20new"
+    "npipe_append": "bottom"
   },
   "*.c": {
     "npipe_com": "gcc -S -xc -c -o - -",
