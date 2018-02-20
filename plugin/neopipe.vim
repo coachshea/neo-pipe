@@ -8,6 +8,8 @@ function! s:pipe(type)
 endfunction
 
 command! -range=% NeoPipe call neopipe#pipe(<line1>,<line2>)
+command! NeoPipeClear call neopipe#clear_buffer()
+command! NeoPipeClose call neopipe#close()
 
 nnoremap <plug>(neopipe-operator) :set operatorfunc=<sid>pipe<cr>g@
 
@@ -16,5 +18,6 @@ if !exists('g:neopipe_do_no_mappings')
   nnoremap ,tt :.NeoPipe<cr>
   nnoremap ,tg :NeoPipe<cr>
   nnoremap ,tq :call neopipe#close()<cr>
+  nnoremap ,tc :call neopipe#clear_buffer()<cr>
   xnoremap ,t :NeoPipe<cr>
 endif
