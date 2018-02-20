@@ -4,27 +4,29 @@ endif
 let g:neopipe_auto = 1
 
 " private functions {{{
-function! s:buffer_setup() "{{{
+function! s:buffer_setup()
    
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  let b:child = bufnr(l:bufname, 1)
+
+  exe printf('%s %s', s:find('npipe_split', 'vsplit'), l:bufname)
+
+  let l:child = bufnr('%')
+  wincmd p
+  let b:child = l:child
 
   call setbufvar(b:child, '&swapfile', 0)
   call setbufvar(b:child, '&buftype', 'nofile')
   call setbufvar(b:child, '&bufhidden', 'wipe')
   call setbufvar(b:child, '&ft', s:find('npipe_ft', ''))
 
-  exe b:child . 'sbuffer'
-  wincmd p
    
 endfunction
-"}}}
 
-function! s:find(var, def) "{{{
+function! s:find(var, def)
 
   " buffer-local
-  let l:var = get(b:, a:var, '')
-  if len(l:var)
+  let l:var = get(b:, a:var)
+  if !empty(l:var)
     return l:var
   endif
 
@@ -39,8 +41,8 @@ function! s:find(var, def) "{{{
   endif
 
   " global
-  let l:var = get(g:, a:var, '')
-  if len(l:var)
+  let l:var = get(g:, a:var)
+  if !empty(l:var)
     call setbufvar('', a:var, l:var)
     return l:var
   endif
@@ -50,40 +52,44 @@ function! s:find(var, def) "{{{
   return a:def
 
 endfunction
-"}}}
 
-function! s:out(id, data, event) "{{{
+function! s:out(id, data, event)
   call s:apply_contents(a:data[:-2])
 endfunction
-"}}}
 
 let s:callbacks = {
       \ 'on_stdout': function('s:out'),
       \ 'on_stderr': function('s:out')
       \ }
 
-function! s:apply_contents(contents) "{{{
+function! s:apply_contents(contents)
 
   let l:append = s:find('npipe_append', '')
 
   if l:append ==# 'top'
-    call nvim_buf_set_lines(b:child, 0, 0, 0, a:contents + ['', ''])
+    let l:sep = s:find('npipe_sep', ['', '---'])
+    call nvim_buf_set_lines(b:child, 0, 0, 0, ['---'] + a:contents)
   elseif l:append ==# 'bottom'
-    call nvim_buf_set_lines(b:child, -1, -1, 0, ['', ''] + a:contents)
+    call nvim_buf_set_lines(b:child, -1, -1, 0, a:contents + ['---'])
+    let l:switchbuf_before = &switchbuf
+    set switchbuf=useopen
+    exe 'sbuffer' b:child
+    exe line('$')
+    wincmd p
+    let &switchbuf = l:switchbuf_before
   else
     call nvim_buf_set_lines(b:child, 0, -1, 0, a:contents)
   endif
 
 endfunction
 "}}}
-"}}}
 
 " pubic function {{{
-function! neopipe#pipe(first, last) "{{{
+function! neopipe#pipe(first, last)
 
   let l:lines = getline(a:first, a:last) + ['']
 
-  if !exists('b:child') || !bufexists(b:child)
+  if !exists('b:child') || !buflisted(b:child)
     call s:buffer_setup()
   endif
 
@@ -103,9 +109,8 @@ function! neopipe#pipe(first, last) "{{{
   endif
 
 endfunction
-"}}}
 
-function! neopipe#clear_buffer() "{{{
+function! neopipe#clear_buffer()
 
   let l:switchbuf_before = &switchbuf
   set switchbuf=useopen
@@ -115,9 +120,8 @@ function! neopipe#clear_buffer() "{{{
   let &switchbuf = l:switchbuf_before
 
 endfunction
-"}}}
 
-function! neopipe#close() "{{{
+function! neopipe#close()
 
   if exists('b:child')
     exe b:child . 'bw!'
@@ -142,7 +146,5 @@ function! neopipe#close() "{{{
   endif
 
 endfunction
-"}}}
-
 "}}}
 " vim: foldmethod=marker:

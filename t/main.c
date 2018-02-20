@@ -14,5 +14,5 @@
 int
 main()
 {
-  printf("hello %s", "john");
+  printf("helloo %s", "john");
 }

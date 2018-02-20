@@ -4,7 +4,12 @@
     "npipe_com": "mongo --quiet",
     "npipe_type": "c",
     "npipe_ft": "javascript",
-    "npipe_append": "top"
+    "npipe_split": "75vsplit",
+    "npipe_append": "top",
+    "npipe_sep": [
+      "+++++",
+      "+++"
+    ]
   },
   "*.mongo.ls": {
     "type": "mongols",
@@ -17,7 +22,8 @@
     "type": "sql",
     "npipe_com": "sqlite3 ~/data.db",
     "npipe_type": "c",
-    "npipe_append": "bottom"
+    "npipe_append": "bottom",
+    "npipe_split": "15split"
   },
   "*.c": {
     "npipe_com": "gcc -S -xc -c -o - -",
