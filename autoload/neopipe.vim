@@ -6,19 +6,21 @@ let g:neopipe_auto = 1
 function! s:buffer_setup()
   let l:buf_ft = s:find('npipe_ft', '')
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
-  exe s:find('npipe_split', 'vnew')
-  let l:npipe_buffer = bufnr('%')
-  exe 'file ' . l:bufname
-  " let l:npipe_buffer = bufnr(l:bufname, 1)
-  call setbufvar(l:npipe_buffer, '&swapfile', 0)
-  call setbufvar(l:npipe_buffer, '&buftype', 'nofile')
-  call setbufvar(l:npipe_buffer, '&bufhidden', 'wipe')
-  call setbufvar(l:npipe_buffer, '&ft', l:buf_ft)
-  wincmd p
-  let b:child = l:npipe_buffer
+  let b:child = bufnr(l:bufname, 1)
+  call setbufvar(b:child, '&swapfile', 0)
+  call setbufvar(b:child, '&buftype', 'nofile')
+  call setbufvar(b:child, '&bufhidden', 'wipe')
+  call setbufvar(b:child, '&ft', l:buf_ft)
+  call setbufvar(b:child, 'npipe_append', s:find('npipe_append', 0))
 endfunction
 
 function! s:find(var, def)
+
+  " buffer-local
+  let l:var = get(b:, a:var, '')
+  if len(l:var)
+    return l:var
+  endif
 
   " projection
   if exists('b:projectionist')
@@ -80,33 +82,34 @@ endfunction
 
 function! s:apply_contents(contents)
   
-  if !exists('b:npipe_append')
-    let b:npipe_append = s:find('npipe_append', 0)
-  endif
+  let l:switchbuf_before = &switchbuf
+  set switchbuf=useopen
 
-  if b:npipe_append
-    let l:switchbuf_before = &switchbuf
-    set switchbuf=useopen
+  exe b:child . 'sbuffer'
 
-    exe b:child . 'sbuffer'
+  if !b:npipe_append
+    %d _
+    call append(0, a:contents)
+  else
     call append(line('$'), ['', ''] + a:contents)
     exe line('$')
-    wincmd p
-
-    let &switchbuf = l:switchbuf_before
-  else
-    call nvim_buf_set_lines(b:child, 0, -1, 0, a:contents)
   endif
+
+  wincmd p
+
+  let &switchbuf = l:switchbuf_before
 
 endfunction
 
 function! neopipe#clear_buffer()
+   
   let l:switchbuf_before = &switchbuf
   set switchbuf=useopen
   exe b:child . 'sbuffer'
   %d _
   wincmd p
   let &switchbuf = l:switchbuf_before
+   
 endfunction
 
 function! neopipe#close()
