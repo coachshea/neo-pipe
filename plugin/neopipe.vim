@@ -15,7 +15,7 @@ nnoremap <plug>(neopipe-operator) :set operatorfunc=<sid>pipe<cr>g@
 
 if !exists('g:neopipe_do_no_mappings')
   nnoremap ,t  :set operatorfunc=<sid>pipe<cr>g@
-  nnoremap ,tt :.NeoPipe<cr>
+  nmap     ,tt ,t_
   nnoremap ,tg :NeoPipe<cr>
   nnoremap ,tq :call neopipe#close()<cr>
   nnoremap ,tc :call neopipe#clear_buffer()<cr>

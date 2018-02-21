@@ -218,45 +218,109 @@ designed to handle per-project requirements.
 }
 ```
 
+Commands
+========
+
+The most basic command that NeoPipe provides is the ':NeoPipe' command. This is
+the command that sends text from the current buffer to a scratch buffer. If the
+scratch buffer is not yet created, it will automatically create it, and if the
+command type (i.e. npipe\_type) is 'c' (i.e. continuous), the ':NeoPipe' command
+will take care of all of that for us.
+
+```vim
+" whole file
+:NeoPipe
+
+" current line
+:.NeoPipe
+
+" line 52
+:52NeoPipe
+
+" line range (13-26)
+:13,26NeoPipe
+```
+
+NeoPipe provides two additional commands - ':NeoPipeClear' and ':NeoPipeClose'.
+':NeoPipeClear', as the name implies, clears the scratch buffer. This is only
+useful if 'npipe\_append' is one of 'top' or 'bottom', otherwise it is done on
+every invocation of ':NeoPipe' anyway.
+
+```vim
+" clear the scratch buffer
+:NeoPipeClear
+
+" close the scratch buffer
+:NeoPipeClose
+```
+
 Mappings
 ========
 
-This plugin provides the following mappings:
+NeoPipe privies on 'Plug' mapping which allows users to attach the NeoPipe
+command to an operator-pending action. This allows us to very quicly sned
+arbitrary regions of text to the command.
 
 ```vim
 <Plug>(npipe-operator)
-<Plug>(npipe-line)
-<Plug>(npipe-whole)
-<Plug>(npipe-close)
-<Plug>(npipe-visual)
 ```
 
-As expected, the "operator" mapping leaves the user in operator-pending mode
-and sends the results to neopipe\_com. The "line" mapping sends the current
-line, the "whole" mapping send the entire file, and the "visual" mapping sends
-the viusally selected text. By default these will be mapped to:
+
+**Important Note**
+
+Neopipe is inherently a line-based command. Therefore when using an operator
+pending action it is important to realize that while character-wise motions are
+acceptable, any line that is touched by the motion or text object will be
+included -- in full -- in the command. This is also true for visual mode. You
+can perform a character-wise visual mode selection, but any line touch by the
+selection is included in full.
+
+Default Mappings
+----------------
+
+By defualt, NeoPipe provides the following convenience mappings:
+
 
 ```vim
+" operator-pending
 nmap ,t <Plug>(npipe-operator)
-nmap ,tt <Plug>(npipe-line)
-nmap ,tg <Plug>(npipe-whole)
-nmap ,tq <Plug>(npipe-close)
-vmap ,t <Plug>(npipe-visual)
+
+" current line
+nmap ,tt <Plug>(npipe-operator)_
+
+" whole file
+nmap ,tg :NeoPipe<cr>
+
+" clear scratch buffer
+nmap ,tc :NeoPipeClear
+
+" close scratch buffer
+nmap ,tq :NeoPipeClose
+
+" visual selection
+vmap ,t :NeoPipe<cr>
 ```
 
-If this is not desired simply include the following in your init.vim **before
-leading NeoPipe**:
+If this is not desired simply include the following in your init.vim
 
 ```vim
 let g:neopipe_do_no_mappings=1
 ```
 
-**important note about <Plug>(npipe-whole):**
-In order to keep the cursor position, \<Plug>(npipe-whole) use the 'q' mark
-(i.e. mq) before copying and piping the entire buffer. It then returns the
-cursor with '`q'.
+Mapping Repeatability
+---------------------
 
-
+The operator-pending mapping and the 'current line' mapping (as defined above)
+are naturally repeatable, no external plugins are requried because they work
+with Vim's natural motions. The other commands are not. A great deal of thought
+went into this, but the rationale is as follows: it is perfectly understandable
+that a user might be working with a pre-existing file and chose to move around
+and send various lines/ranges to the ':NeoPipe' command. However, it is doubtful
+that a user would want to send an entire file to the command twice without some
+modifications in between (what would be the point). It is equally doubtful that
+anyone would need to clear or close a buffer twice without intervening events.
+Therefore, the two mappings that have the most (and possibly only) utility for a
+repeat motion are the two that are repeatable.
 
 Summary
 =======
