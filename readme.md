@@ -76,7 +76,8 @@ The third options is to simply echo the selected lines in the output buffer.
 This feature could come in handy if a user was testing a user-defined motion or
 text object and wanted to make sure that they correct text was being selected.
 
-Whichever method the user chooses, the output of the command will be sent to the output buffer. User posses the ability to define the filetype, split,
+Whichever method the user chooses, the output of the command will be sent to
+the output buffer. User posses the ability to define the filetype, split,
 height/width, etc. of the output buffer.
 
 Users have the ability to set options at the buffer, projection (see
@@ -113,7 +114,7 @@ npipe\_append
 -------------
 
 This variable informs NeoPipe of whether to clear the buffer for each
-invocation, or to appand each subsequent write of the output buffer. The text
+invocation, or to append each subsequent write of the output buffer. The text
 can be appended to the top or bottom of the buffer by setting this to 'top' or
 'bottom' respectively. If npipe\_append in not set, or set to anything other
 than 'top' or 'bottom', then the buffer is cleared and rewritten on each
@@ -133,15 +134,15 @@ search at the buffer, then projection, then global levels. If somewhere up
 the "food chain" this variable was set then it would affect all lower level
 buffers until overwritten by a "closer" variable. Therefore, it is often a
 good idea to be explicit. Because the actual value does not matter except for
-being other than 'top' or 'bottom', user can set it to number 0, to an empty
+being other than 'top' or 'bottom', users can set it to number 0, to an empty
 string, or to anything that helps them remember the intent (i.e. 'clear',
 'new', 'foobar', etc.)
 
 npipe\_com
 ----------
 
-The npipe\_com command is the actual command through which the text will be sent
-(either continuously running or through a series of one-offs).
+The npipe\_com command is the actual command through which the text will be
+sent, either continuously running or through a series of one-offs.
 
 **important note**
 
