@@ -372,7 +372,7 @@ for the entire file (still not sure what the use would be), I suggest the
 [textobj-entire] plugin also by kana. There are many other useful user-defined
 text-objects available within that eccosystem. If you are not familiar with
 it, I encourage you to check out the [textobj-user] plugin and the [related
-projects] page.
+plugins] page.
 
 <!-- Summary -->
 <!-- ======= -->
