@@ -352,7 +352,7 @@ Mapping Repeatability
 ---------------------
 
 The operator-pending mapping and the 'current line' mapping (as defined above)
-are naturally repeatable, no external plugins are requried because they work
+are naturally repeatable, no external plugins are required because they work
 with Vim's natural motions. The other commands are not. A great deal of thought
 went into this, but the rationale is as follows: it is perfectly understandable
 that a user might be working with a pre-existing file and chose to move around
@@ -361,14 +361,15 @@ that a user would want to send an entire file to the command twice without some
 modifications in between (what would be the point). It is equally doubtful that
 anyone would need to clear or close a buffer twice without intervening events.
 Therefore, the two mappings that have the most (and possibly only) utility for a
-repeat motion are the two that are repeatable.
+repeat action are the two that are repeatable.
 
-Worth noting, the operator-pending mode will, of course, work with any
-text object, in including user-defined text-objects. The [textobj-user]
-and related plugins provide many useful text-objects which can be combined
-with the NeoPipe operator mapping. If a user is looking for repeatability
-for the entire file (still not sure what the use would be), I suggest the
-[textobj-entire] plugin also by kana.
+Worth noting, the operator-pending mode will, of course, work with any text
+object, including user-defined text-objects. The [textobj-user] and related
+[related plugins](https://github.com/kana/vim-textobj-user/wiki) provide many useful
+text-objects which can be combined with the NeoPipe operator mapping. If, for
+example, a user is looking for repeatability for the entire file (still not
+sure what the use would be), I suggest the [textobj-entire] plugin also by
+kana.
 
 <!-- Summary -->
 <!-- ======= -->
