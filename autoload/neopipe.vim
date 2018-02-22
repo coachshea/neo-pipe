@@ -19,7 +19,6 @@ function! s:buffer_setup()
   call setbufvar(b:child, '&bufhidden', 'wipe')
   call setbufvar(b:child, '&ft', s:find('npipe_ft', ''))
 
-   
 endfunction
 
 function! s:find(var, def)
