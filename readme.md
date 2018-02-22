@@ -14,9 +14,8 @@ Table of Contents
 * [Introduction](#introduction)
 * [Dependencies](#dependencies)
 * [Setup](#setup)
-  * [Variables](#variables)
-    * [npipe\_type](#npipe_type)
-    * [npipe\_append](#npipe_append)
+  * [npipe\_type](#npipe_type)
+  * [npipe\_append](#npipe_append)
   * [npipe\_com](#npipe_com)
   * [npipe\_ft](#npipe_ft)
   * [npipe\_split](#npipe_split)
@@ -72,9 +71,6 @@ text object and wanted to make sure that they correct text was being selected.
 Whichever method the user chooses, the output of the command will be sent to a
 scratch buffer.
 
-Variables
----------
-
 All variables can be set at the buffer, projection (see [projectionist] by Tim
 Pope and the [projections] section of this document), or global level. NeoPipe
 will search for the variables in that order and apply the first one that it
@@ -83,7 +79,8 @@ buffer and global level. For examples of setting variables in projections, see
 the [projections] section of this document. The following are the available
 variables that collectively determine the behavior of NeoPipe.
 
-### npipe\_type
+npipe\_type
+-----------
 
 NeoPipe's most fundamental command. This variable tells NeoPipe if the command
 is to be run once and all subsequent text will be piped through it's output or
@@ -101,7 +98,8 @@ au fileytpe coffe let b:npipe_type='s'
 au filetype txt let b:npipe_type=0
 ```
 
-### npipe\_append
+npipe\_append
+-------------
 
 This variable informs NeoPipe of whether to clear the buffer for each
 invocation, or to appand each subsequent write of the scratch buffer. The text
