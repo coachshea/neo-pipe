@@ -46,8 +46,8 @@ Dependencies
 ============
 
 This plugin has no dependencies, but can work with tpope's [projectionist]
-plugin. If you are not familiar with [projectionist] I strongly encourage you to
-check it out. It excels at project-level configuration.
+plugin. If you are not familiar with [projectionist], I strongly encourage you
+to check it out. It excels at project-level configuration.
 
 Setup
 =====
