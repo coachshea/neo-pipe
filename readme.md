@@ -31,7 +31,10 @@ Table of Contents
 [npipe_start]: #npipe_start
 [npipe_com]: #npipe_com
 [npipe_ft]: #npipe_ft
+[mappings]: #mappings
 [projections]: $projections
+[textobj-user]: kana/vim-textobj-user
+[textobj-entire]: kana/vim-textobj-entire
 
 Introduction
 ============
@@ -45,9 +48,11 @@ make changes to a database, etc.
 Dependencies
 ============
 
-This plugin has no dependencies, but can work with tpope's [projectionist]
-plugin. If you are not familiar with [projectionist], I strongly encourage you
-to check it out. It excels at project-level configuration.
+NeoPipe has no dependencies, but can work with tpope's [projectionist] plugin.
+If you are not familiar with [projectionist], I strongly encourage you to
+check it out. It excels at project-level configuration. NeoPipe also provides
+an operator-pending mapping (see [mappings] sections) which works well with
+[textobj-user] by kana and all of the related plugins.
 
 Setup
 =====
@@ -330,6 +335,13 @@ modifications in between (what would be the point). It is equally doubtful that
 anyone would need to clear or close a buffer twice without intervening events.
 Therefore, the two mappings that have the most (and possibly only) utility for a
 repeat motion are the two that are repeatable.
+
+Worth noting, the operator-pending mode will, of course, work with any
+text object, in including user-defined text-objects. The [textobj-user]
+and related plugins provide many useful text-objects which can be combined
+with the NeoPipe operator mapping. If a user is looking for repeatability
+for the entire file (still not sure what the use would be), I suggest the
+[texobj-entire] plugin also by kana.
 
 <!-- Summary -->
 <!-- ======= -->
