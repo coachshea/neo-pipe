@@ -341,7 +341,7 @@ text object, in including user-defined text-objects. The [textobj-user]
 and related plugins provide many useful text-objects which can be combined
 with the NeoPipe operator mapping. If a user is looking for repeatability
 for the entire file (still not sure what the use would be), I suggest the
-[texobj-entire] plugin also by kana.
+[textobj-entire] plugin also by kana.
 
 <!-- Summary -->
 <!-- ======= -->
