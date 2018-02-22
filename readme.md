@@ -35,6 +35,7 @@ Table of Contents
 [projections]: #projections
 [textobj-user]: https://github.com/kana/vim-textobj-user
 [textobj-entire]: https://github.com/kana/vim-textobj-entire
+[related plugins]: https://github.com/kana/vim-textobj-user/wiki
 
 Introduction
 ============
@@ -364,12 +365,14 @@ Therefore, the two mappings that have the most (and possibly only) utility for a
 repeat action are the two that are repeatable.
 
 Worth noting, the operator-pending mode will, of course, work with any text
-object, including user-defined text-objects. The [textobj-user] and related
-[related plugins](https://github.com/kana/vim-textobj-user/wiki) provide many useful
-text-objects which can be combined with the NeoPipe operator mapping. If, for
-example, a user is looking for repeatability for the entire file (still not
-sure what the use would be), I suggest the [textobj-entire] plugin also by
-kana.
+object, including user-defined text-objects. The [textobj-user] and [related
+plugins] provide many useful text-objects which can be combined with the
+NeoPipe operator mapping. If, for example, a user is looking for repeatability
+for the entire file (still not sure what the use would be), I suggest the
+[textobj-entire] plugin also by kana. There are many other useful user-defined
+text-objects available within that eccosystem. If you are not familiar with
+it, I encourage you to check out the [textobj-user] plugin and the [related
+projects] page.
 
 <!-- Summary -->
 <!-- ======= -->
