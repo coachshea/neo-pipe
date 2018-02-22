@@ -24,7 +24,6 @@ Table of Contents
 * [Mappings](#mappings)
   * [Default Mappings](#default-mappings)
   * [Mapping Repeatability](#mapping-repeatability)
-* [Summary](#summary)
 
 <!-- vim-markdown-toc -->
 
@@ -332,5 +331,5 @@ anyone would need to clear or close a buffer twice without intervening events.
 Therefore, the two mappings that have the most (and possibly only) utility for a
 repeat motion are the two that are repeatable.
 
-Summary
-=======
+<!-- Summary -->
+<!-- ======= -->
