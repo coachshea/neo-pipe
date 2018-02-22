@@ -17,12 +17,14 @@ Table of Contents
   * [Variables](#variables)
     * [npipe\_type](#npipe_type)
     * [npipe\_append](#npipe_append)
-  * [npipe\_start](#npipe_start)
   * [npipe\_com](#npipe_com)
   * [npipe\_ft](#npipe_ft)
-  * [Output Window](#output-window)
+  * [npipe\_split](#npipe_split)
 * [Projections](#projections)
+* [Commands](#commands)
 * [Mappings](#mappings)
+  * [Default Mappings](#default-mappings)
+  * [Mapping Repeatability](#mapping-repeatability)
 * [Summary](#summary)
 
 <!-- vim-markdown-toc -->
@@ -76,40 +78,40 @@ Variables
 All variables can be set at the buffer, projection (see [projectionist] by Tim
 Pope and the [projections] section of this document), or global level. NeoPipe
 will search for the variables in that order and apply the first one that it
-finds. The following are the available variables that collectively determine
-the behavior of NeoPipe.
+finds. The examples that follow demonstrate setting each variable at the
+buffer and global level. For examples of setting variables in projections, see
+the [projections] section of this document. The following are the available
+variables that collectively determine the behavior of NeoPipe.
 
 ### npipe\_type
 
-NeoPipe's most fundamental command. This variable tells NeoPipe if the comman
+NeoPipe's most fundamental command. This variable tells NeoPipe if the command
+is to be run once and all subsequent text will be piped through it's output or
+if each invocation of NeoPipe will send the selected text through the command.
+For example
+
+**Important Note**
+
+If type is not set, NeoPipe will ignore npipe\_com and simply send the text to
+the scracth buffer verbatim.
+
+```vim
+let g:npipe_type='c'
+au fileytpe coffe let b:npipe_type='s'
+au filetype txt let b:npipe_type=0
+```
 
 ### npipe\_append
 
-This variable informs NeoPipe of whether the buffer should be cleared for each
-invocation, or to appand each subsequent write of the scratch buffer to the
-bottom of the buffer
-
-
-
-
-
-npipe\_start
-----------------
-
-This is the command that will be run on the first invocation (per buffer)
-of the pipe comman. This can be as simple as a shell (i.e. "sh", "bash",
-"zsh", etc.) which all ensuing invocations will be run through. Or, it could
-start a long running program that will be used to interpret all further
-commands (i.e. "mongo", "sqlite3", "node", etc). Whatever the value of
-npipe\_start, that value will be passed to the jobstart() function. All
-ensuing commands will be sent to this command through the jobsend() function.
-The default value for this command is the value of &shell. As with all NeoPipe
-variables, this can be set at the buffer or global levels, or set through a
-[projection](#projections).
+This variable informs NeoPipe of whether to clear the buffer for each
+invocation, or to appand each subsequent write of the scratch buffer. The text
+can be appended to the top or bottom of the buffer by seeting this to 'top' or
+'bottom' respectively.
 
 ```vim
-let g:npipe_start = 'zsh'
-au filetype sql let b:npipe_start = 'sqlite3 ~/db/myDatabase.db'
+let g:npipe_type='bottom'
+au filetype mongo let b:npipe_type='top'
+au filetype javascript let b:npipe_type=0
 ```
 
 npipe\_com
@@ -126,11 +128,20 @@ in the scracth buffer. It is unlikley that a great many use cases exist for
 this behavior, save checking the functionality of user defined motions and
 text-objects.
 
+```vim
+let g:npipe_com = 'zsh'
+au filetype sql let b:npipe_com = 'sqlite3 ~/db/myDatabase.db'
+au fileytpe mongo let b:npipe_com = 'mongo'
+
+" with b:npipe_type='s'
+au fileytpe livescript let b:npipe_com = 'lsc -cb'
+```
+
 npipe\_ft
 -----------
 
 This command simply sets the filetype of the output. For example, if we are
-pumping text through a mongodb database, we would likely want the output to be
+pumping text through a mongodb database, we would likely want the output to
 have json syntax highlighting.
 
 ```javascript
@@ -139,14 +150,14 @@ have json syntax highlighting.
 }
 ```
 
-Output Window
--------------
+npipe\_split
+------------
 
-By default, the output window will be shown in a vertically split window. The
-can be changed by setting the npipe\_split option. As with all options, this can
-be set on the buffer or global levels, or through a projection. The option can
-be either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use case
-for 'tabnew', but it is available.
+By default, the scratch buffer will be shown in a vertically split window. The
+npipe\_split option. As with all options, this can be set on the buffer or
+global levels, or through a projection. The option can be either 'new', 'vnew'
+(default), or 'tabnew'. It's hard to imagine a use case for 'tabnew', but it
+is available.
 
 ```vim
 let g:npipe_split = 'new'
@@ -170,7 +181,8 @@ smoothly with the [projectionist] plugin. If you are not familiar with
 [projectionist], I stongly encourage you to give it a look. It allows for a
 simple and clean method of assigning values on a per-project (or global) basis.
 Using [projectionist] can save you from a lot of unneccessary autocommands
-designed to handle per-project requirements.
+designed to handle per-project requirements. The follwoing examples could be
+included in a '.projections.json' file in the root directory of a project.
 
 ```Javascript
 // compile livescript
