@@ -19,5 +19,5 @@ if !exists('g:neopipe_do_no_mappings')
   nnoremap ,tg :NeoPipe<cr>
   nnoremap ,tq :call neopipe#close()<cr>
   nnoremap ,tc :call neopipe#clear_buffer()<cr>
-  xnoremap ,t :NeoPipe<cr>
+  xnoremap ,t  :NeoPipe<cr>
 endif
