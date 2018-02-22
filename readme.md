@@ -32,9 +32,9 @@ Table of Contents
 [npipe_com]: #npipe_com
 [npipe_ft]: #npipe_ft
 [mappings]: #mappings
-[projections]: $projections
-[textobj-user]: kana/vim-textobj-user
-[textobj-entire]: kana/vim-textobj-entire
+[projections]: #projections
+[textobj-user]: https://github.com/kana/vim-textobj-user
+[textobj-entire]: https://github.com/kana/vim-textobj-entire
 
 Introduction
 ============
