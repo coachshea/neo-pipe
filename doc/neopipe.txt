@@ -10,7 +10,7 @@
 
 Author:  John Shea <coachshea@fastmail.com>
 
-================================================================================
+==========================================================================
 Contents
 
 Introduction ............................. |neopipe-intro|
@@ -19,82 +19,65 @@ Configuration ............................ |neopipe-configuration|
   npipe_filetype ......................... |neopipe-npipe_ft|
   npipe_split ............................ |neopipe-npipe_split|
 Commands ................................. |neopipe-commands|
-Pipe ................................... |neopipe-Pipe-command|
-PipeNearest ............................ |neopipe-PipeNearest-command|
-PipeClose .............................. |neopipe-PipeClose-command|
+  NeoPipe ................................ |neopipe-NeoPipe-command|
+  NeoPipeClear ........................... |neopipe-NeoPipeClear-command|
+  NeoPipeClose ........................... |neopipe-NeoPipeClose-command|
 Examples ................................. |neopipe-examples|
 About .................................... |neopipe-about|
 
-===============================================================================
+==========================================================================
 INTRODUCTION                                    *neopipe-intro*
 
 neopipe sends the current buffer to a shell command, and instantly displays
 the output.
 
-===============================================================================
-CONFIGURATION                                   *neoppipe-configuration*
+==========================================================================
+CONFIGURATION                                   *neopipe-configuration*
 
-*neopipe-pipe_command*
+*neopipe-npipe_com*
 
 pipe_com                Required! Set this to any shell command that will take
 the contents of your buffer on STDIN, and eturn the
 result on STDOUT.
 
-*neopipe-pipe_ft*
+*neopipe-npipe_ft*
 
 pipe_ft                 The filetype of the output buffer. Useful for syntax
 highlighting of the result, or running arbitrary
 autocommands against it.
 
-*neopipe-pipe_search_start*
+*neopipe-pipe_type*
 
-pipe_search_start       The regex to use to detemine the start of a code block
-block. For use with the VimPipeNearest command. This
-can be set on a buffer g:vimpipe_search_start or
-global level, with the buffer level having precedence
 
-*neopipe-pipe_search_end*
 
-pipe_search_end         The regex to use to determine the end of a code block.
-For use with the VimPipeNearest Command. This can be
-set on a buffer or global level, with the buffer level
-having precedence
+*neopipe-npipe_append*
 
-*neopipe-pipe_start_adjust*
-*neopipe-pipe_end_adjust*
+*neopipe-npipe_split*
 
-pipe_start_adjust       By default, PipeNearest will include the lines that match
-pipe_end_adjust         pipe_search_start and pipe_search_end, but this is configurable
-through pipe_start_adjust and pipe_end_adjust. To discard
-the first line of the upward (start) search simply set
-pipe_search_start to 1. To discard the downward (end) match,
-                  set pipe_search_end to -1.
 
-===============================================================================
+==========================================================================
 COMMANDS                                        *neopipe-commands*
 
 VimPipe offers three commands.
 
-*neopipe-Pipe-command*
+*neopipe-NeoPipe-command*
 
-Pipe
+NeoPipe                 Run lines of text through the command
 
 Send the selected contents (entire buffer by defualt)
-  through the command specified by |neopipe-pipe_command|
-  and displays the results. The buffer does not need to be
-  saved first.
+through the command specified by |neopipe-npipe_com|
+and displays the results. The buffer does not need to be
+saved first.
 
-  *neopipe-PipeNearest-command*
+*neopipe-NeoPipeClear-command*
 
-  PipeNearest            Run the nearest code block based on the value of
-  |neopipe-pipe_search_start| and |vim-pipe-pipe_search_end|
-  through the command specified by |neopipe-pipe_command|
+NeoPipeClear            Clear the scractch buffer
 
-  *neopipe-PipeClose-command*
+*neopipe-NeoPipeClose-command*
 
-  PipeClose              Close the scratch buffer.
+NeoPipeClose            Close the scratch buffer.
 
-===============================================================================
+==============================================================================
 EXAMPLES                                         *neopipe-examples*
 
 The following are possible configurations. These can be set globally or on a
@@ -143,7 +126,7 @@ per-project bases:
   "pipe_start_adjust": 1
 }
 
-===============================================================================
+==============================================================================
 ABOUT                                           *neopipe-about*
 
 Grab the latest version or report a bug on GitHub:
