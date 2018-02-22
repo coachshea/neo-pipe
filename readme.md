@@ -39,54 +39,60 @@ Table of Contents
 Introduction
 ============
 
-The purpose of this plugin is to allow the user to send text through an
-external command and display the output in a scratch buffer. Mappings are
-defined which can take an operator, work on a visual selection, or work on a
-line. This allows you to work in an ordinary vim buffer and use it as a repl,
-make changes to a database, etc.
+NeoPipe allows users to send text through an external command and display the
+output in the output buffer. The ':NeoPipe' command takes a range of text (the
+enter file by default) and pipes it through a user-defined command. NeoPipe
+defines mappings which can take an operator, work on a visual selection, or
+work on a line. This allows users to work in an ordinary vim buffer and use it
+as a repl, make changes to a database, etc.
 
 Dependencies
 ============
 
 NeoPipe has no dependencies, but can work with tpope's [projectionist] plugin.
 If you are not familiar with [projectionist], I strongly encourage you to
-check it out. It excels at project-level configuration. NeoPipe also provides
-an operator-pending mapping (see [mappings] sections) which works well with
-[textobj-user] by kana and all of the related plugins.
+check it out. It excels at project-level configuration.
+
+NeoPipe also provides an operator-pending mapping (see [mappings] sections)
+which works well with [textobj-user] by kana and all of the related plugins.
 
 Setup
 =====
 
 Neopipe allows users to interact with their commands in one of three ways.
-First, users can define a long running command through which all subsqquent
+First, users can define a long running command through which all subsequent
 text will be piped (defined as [npipe_start]). This can be as simple as
 opening a shell command or it could open a database, a repl, or any other
 command that the user wants to keep running for the duration of the session.
 Behind the scenes, this uses Neovim's jobstart function.
 
 The second option available to NeoPipe users is to define a command that will
-take the text as stdin and which rights it's output to stdout. In
-this case, the system command is used on each invocation of NeoPipe.
+takes each batch of text through it's stdin and which rights it's output
+to stdout. In this case, the system command is used on each invocation of
+NeoPipe.
 
-The third options is to simply echo the selected lines in the scratch buffer.
-This feature could come in handy if a user was testing a userdefined motion or
+The third options is to simply echo the selected lines in the output buffer.
+This feature could come in handy if a user was testing a user-defined motion or
 text object and wanted to make sure that they correct text was being selected.
 
-Whichever method the user chooses, the output of the command will be sent to a
-scratch buffer.
+Whichever method the user chooses, the output of the command will be sent to the output buffer. User posses the ability to define the filetype, split,
+height/width, etc. of the output buffer.
 
-All variables can be set at the buffer, projection (see [projectionist] by Tim
-Pope and the [projections] section of this document), or global level. NeoPipe
-will search for the variables in that order and apply the first one that it
-finds. The examples that follow demonstrate setting each variable at the
-buffer and global level. For examples of setting variables in projections, see
-the [projections] section of this document. The following are the available
-variables that collectively determine the behavior of NeoPipe.
+Users have the ability to set options at the buffer, projection (see
+[projectionist] by Tim Pope and the [projections] section of this document),
+or global level. NeoPipe will search for the options in that order and apply
+the first one that it finds. The examples that follow demonstrate setting each
+option at the buffer and global level. For examples of setting options in
+projections, see the [projections] section of this document. The following are
+the available options that collectively determine the behavior of NeoPipe.
+Technically, user do not need to set any of these options, but if none are set,
+text will simply be echoed to the output buffer that will be opened in a vertical
+split (evenly split) buffer with no filetype.
 
 npipe\_type
 -----------
 
-NeoPipe's most fundamental command. This variable tells NeoPipe if the command
+NeoPipe's most fundamental option. This options tells NeoPipe if the command
 is to be run once and all subsequent text will be piped through it's output or
 if each invocation of NeoPipe will send the selected text through the command.
 For example
@@ -94,7 +100,7 @@ For example
 **Important Note**
 
 If type is not set, NeoPipe will ignore npipe\_com and simply send the text to
-the scracth buffer verbatim.
+the output buffer verbatim.
 
 ```vim
 let g:npipe_type='c'
@@ -106,9 +112,11 @@ npipe\_append
 -------------
 
 This variable informs NeoPipe of whether to clear the buffer for each
-invocation, or to appand each subsequent write of the scratch buffer. The text
-can be appended to the top or bottom of the buffer by seeting this to 'top' or
-'bottom' respectively.
+invocation, or to appand each subsequent write of the output buffer. The text
+can be appended to the top or bottom of the buffer by setting this to 'top' or
+'bottom' respectively. If npipe\_append in not set, or set to anything other
+than 'top' or 'bottom', then the buffer is cleared and rewritten on each
+invocation.
 
 ```vim
 let g:npipe_type='bottom'
@@ -116,19 +124,28 @@ au filetype mongo let b:npipe_type='top'
 au filetype javascript let b:npipe_type=0
 ```
 
+**Important Note**
+
+If a user always desired to clear the buffer on each invocation, then it is
+simple enough not to set this variable at all. But remember, all variables are
+search at the buffer, then projection, then global levels. If somewhere up
+the "food chain" this variable was set then it would affect all lower level
+buffers until overwritten by a "closer" variable. Therefore, it is often a
+good idea to be explicit. Because the actual value does not matter except for
+being other than 'top' or 'bottom', user can set it to number 0, to an empty
+string, or to anything that helps them remember the intent (i.e. 'clear',
+'new', 'foobar', etc.)
+
 npipe\_com
 ----------
 
-When NeoPipe users want to define a command that takes the chosen text through
-it's stdin and pipes it's result to stdout, they simply define the npipe\_com
-command.
+The npipe\_com command is the actual command through which the text will be sent
+(either continuously running or through a series of one-offs).
 
 **important note**
 
-If neither npipe\_start nor npipe\_com are set, the text will simply be echoed
-in the scracth buffer. It is unlikley that a great many use cases exist for
-this behavior, save checking the functionality of user defined motions and
-text-objects.
+If npip_com is not set, regardless of the setting of npipe\_type, the command is
+simply echoed to the output buffer.
 
 ```vim
 let g:npipe_com = 'zsh'
@@ -142,7 +159,7 @@ au fileytpe livescript let b:npipe_com = 'lsc -cb'
 npipe\_ft
 -----------
 
-This command simply sets the filetype of the output. For example, if we are
+The npipe\_ft command sets the filetype of the output buffer. For example, if we are
 pumping text through a mongodb database, we would likely want the output to
 have json syntax highlighting.
 
@@ -155,11 +172,11 @@ have json syntax highlighting.
 npipe\_split
 ------------
 
-By default, the scratch buffer will be shown in a vertically split window. The
-npipe\_split option. As with all options, this can be set on the buffer or
-global levels, or through a projection. The option can be either 'new', 'vnew'
-(default), or 'tabnew'. It's hard to imagine a use case for 'tabnew', but it
-is available.
+The npipe\_split option is 'vnew' by default. Meaning, the output buffer will
+be shown in a vertically and evenly split window. As with all options, this
+can be set on the buffer or global levels, or through a projection. The option
+can be either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use
+case for 'tabnew', but it is available.
 
 ```vim
 let g:npipe_split = 'new'
@@ -173,6 +190,16 @@ window equally.
 ```vim
 let g:npipe_split = '40vnew'
 au filetype coffee let b:npipe_split = '25new'
+```
+
+User can set other options and commands on the window. Check the Vim
+documentation for further details:
+
+```vim
+:h vsplit
+:h split
+:h ++opt
+:h +cmd
 ```
 
 Projections
@@ -236,8 +263,8 @@ Commands
 ========
 
 The most basic command that NeoPipe provides is the ':NeoPipe' command. This is
-the command that sends text from the current buffer to a scratch buffer. If the
-scratch buffer is not yet created, it will automatically create it, and if the
+the command that sends text from the current buffer to the output buffer. If the
+output buffer is not yet created, it will automatically create it, and if the
 command type (i.e. npipe\_type) is 'c' (i.e. continuous), the ':NeoPipe' command
 will take care of all of that for us.
 
@@ -256,15 +283,15 @@ will take care of all of that for us.
 ```
 
 NeoPipe provides two additional commands - ':NeoPipeClear' and ':NeoPipeClose'.
-':NeoPipeClear', as the name implies, clears the scratch buffer. This is only
+':NeoPipeClear', as the name implies, clears the output buffer. This is only
 useful if 'npipe\_append' is one of 'top' or 'bottom', otherwise it is done on
 every invocation of ':NeoPipe' anyway.
 
 ```vim
-" clear the scratch buffer
+" clear the output buffer
 :NeoPipeClear
 
-" close the scratch buffer
+" close the output buffer
 :NeoPipeClose
 ```
 
@@ -305,10 +332,10 @@ nmap ,tt <Plug>(npipe-operator)_
 " whole file
 nmap ,tg :NeoPipe<cr>
 
-" clear scratch buffer
+" clear output buffer
 nmap ,tc :NeoPipeClear
 
-" close scratch buffer
+" close output buffer
 nmap ,tq :NeoPipeClose
 
 " visual selection
