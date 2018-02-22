@@ -370,9 +370,10 @@ plugins] provide many useful text-objects which can be combined with the
 NeoPipe operator mapping. If, for example, a user is looking for repeatability
 for the entire file (still not sure what the use would be), I suggest the
 [textobj-entire] plugin also by kana. There are many other useful user-defined
-text-objects available within that eccosystem. If you are not familiar with
+text-objects available within that ecosystem. If you are not familiar with
 it, I encourage you to check out the [textobj-user] plugin and the [related
-plugins] page.
+plugins] page. Even if not for repeatability, the plugins can be a great
+benefit.
 
 <!-- Summary -->
 <!-- ======= -->
