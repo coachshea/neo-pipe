@@ -65,11 +65,11 @@ First, users can define a long running command through which all subsequent
 text will be piped (defined as [npipe_start]). This can be as simple as
 opening a shell command or it could open a database, a repl, or any other
 command that the user wants to keep running for the duration of the session.
-Behind the scenes, this uses Neovim's jobstart function.
+Behind the scenes, this uses Neovim's 'jobstart()' function.
 
 The second option available to NeoPipe users is to define a command that will
 takes each batch of text through it's stdin and which rights it's output
-to stdout. In this case, the system command is used on each invocation of
+to stdout. In this case, the 'system()' command is used on each invocation of
 NeoPipe.
 
 The third options is to simply echo the selected lines in the output buffer.
