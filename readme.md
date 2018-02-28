@@ -55,17 +55,19 @@ If you are not familiar with [projectionist], I strongly encourage you to
 check it out. It excels at project-level configuration.
 
 NeoPipe also provides an operator-pending mapping (see [mappings] sections)
-which works well with [textobj-user] by kana and all of the related plugins.
+which works well with [textobj-user] by kana and all of the [related plugins]. If
+you are not yet familiar with these plugins, it is worth your time to check them
+out.
 
 Setup
 =====
 
 Neopipe allows users to interact with their commands in one of three ways.
 First, users can define a long running command through which all subsequent
-text will be piped (defined as [npipe_start]). This can be as simple as
-opening a shell command or it could open a database, a repl, or any other
-command that the user wants to keep running for the duration of the session.
-Behind the scenes, this uses Neovim's 'jobstart()' function.
+text will be piped. This can be as simple as opening a shell or it could
+open a database, a repl, or any other command that the user wants to keep
+running for the duration of the session. Behind the scenes, this uses Neovim's
+'jobstart()' function.
 
 The second option available to NeoPipe users is to define a command that will
 takes each batch of text through it's stdin and which rights it's output
@@ -74,10 +76,10 @@ NeoPipe.
 
 The third options is to simply echo the selected lines in the output buffer.
 This feature could come in handy if a user was testing a user-defined motion or
-text object and wanted to make sure that they correct text was being selected.
+text object and wanted to make sure that the correct text was being selected.
 
 Whichever method the user chooses, the output of the command will be sent to
-the output buffer. User posses the ability to define the filetype, split,
+the output buffer. Users posses the ability to define the filetype, split,
 height/width, etc. of the output buffer.
 
 Users have the ability to set options at the buffer, projection (see
@@ -91,24 +93,50 @@ Technically, user do not need to set any of these options, but if none are set,
 text will simply be echoed to the output buffer that will be opened in a vertical
 split (evenly split) buffer with no filetype.
 
+npipe\_com
+----------
+
+The npipe\_com command is the actual command through which the text will be
+sent, either continuously running or through a series of one-offs.
+
+```vim
+let g:npipe_com = 'zsh'
+au filetype sql let b:npipe_com = 'sqlite3 ~/db/myDatabase.db'
+au fileytpe mongo let b:npipe_com = 'mongo'
+
+" with b:npipe_type='s'
+au fileytpe livescript let b:npipe_com = 'lsc -cb'
+```
+
 npipe\_type
 -----------
 
 NeoPipe's most fundamental option. This options tells NeoPipe if the command
-is to be run once and all subsequent text will be piped through it's output or
-if each invocation of NeoPipe will send the selected text through the command.
-For example
+is to be run once and all subsequent text will be piped through it's output
+or if each invocation of NeoPipe will send the selected text through the
+command. For continuously running a command set this option to 'c', to run the
+command on each invocation, set it to 's'. If npipe\_type is not set or set to
+anything else, it is treated as echoing and npipe\_com will be ignored. For
+example
+
+```vim
+" run the command continuously
+let g:npipe_type='c'
+
+" run the command each time
+au fileytpe coffe let b:npipe_type='s'
+
+" echo the text in the scratch buffer
+au filetype txt let b:npipe_type=0
+```
 
 **Important Note**
 
-If type is not set, NeoPipe will ignore npipe\_com and simply send the text to
-the output buffer verbatim.
-
-```vim
-let g:npipe_type='c'
-au fileytpe coffe let b:npipe_type='s'
-au filetype txt let b:npipe_type=0
-```
+If both npipe\_com and npipe\_type are not set, NeoPipe will simply echo the
+text in the scratch buffer. These two commands collectively determine the
+principle behavior of this NeoPipe. It is certainly fine to leave either/both
+unset if echoing is desired, but in most cases NeoPipe's true power comes from
+the skillful utilization of these two options.
 
 npipe\_append
 -------------
@@ -138,26 +166,6 @@ being other than 'top' or 'bottom', users can set it to number 0, to an empty
 string, or to anything that helps them remember the intent (i.e. 'clear',
 'new', 'foobar', etc.)
 
-npipe\_com
-----------
-
-The npipe\_com command is the actual command through which the text will be
-sent, either continuously running or through a series of one-offs.
-
-**important note**
-
-If npip_com is not set, regardless of the setting of npipe\_type, the command is
-simply echoed to the output buffer.
-
-```vim
-let g:npipe_com = 'zsh'
-au filetype sql let b:npipe_com = 'sqlite3 ~/db/myDatabase.db'
-au fileytpe mongo let b:npipe_com = 'mongo'
-
-" with b:npipe_type='s'
-au fileytpe livescript let b:npipe_com = 'lsc -cb'
-```
-
 npipe\_ft
 -----------
 
@@ -176,9 +184,9 @@ npipe\_split
 
 The npipe\_split option is 'vnew' by default. Meaning, the output buffer will
 be shown in a vertically and evenly split window. As with all options, this
-can be set on the buffer or global levels, or through a projection. The option
-can be either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use
-case for 'tabnew', but it is available.
+can be set on the buffer, projection or global levels. The option can be
+either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use case
+for 'tabnew', but it is available.
 
 ```vim
 let g:npipe_split = 'new'
@@ -187,7 +195,7 @@ au filetype vim let b:npipe_split = 'vnew'
 
 It is also possible to specify a height or width by supplying a number to the
 split or vsplit (respectively) command. The default values of will split the
-window equally.
+window equally. Below are examples of more explicit splitting behavior.
 
 ```vim
 let g:npipe_split = '40vnew'
@@ -209,55 +217,69 @@ Projections
 
 As mentioned previously, this plugin has been specifically designed to integrate
 smoothly with the [projectionist] plugin. If you are not familiar with
-[projectionist], I stongly encourage you to give it a look. It allows for a
+[projectionist], I strongly encourage you to give it a look. It allows for a
 simple and clean method of assigning values on a per-project (or global) basis.
-Using [projectionist] can save you from a lot of unneccessary autocommands
-designed to handle per-project requirements. The follwoing examples could be
+Using [projectionist] can save you from a lot of unnecessary autocommands
+designed to handle per-project requirements. The following examples could be
 included in a '.projections.json' file in the root directory of a project.
 
 ```Javascript
 // compile livescript
 "*.ls": {
   "npipe_com": "lsc -cbp",
+  "npipe_type": "s",
   "npipe_ft": "javascript",
-  "npipe_split": "30new"
+  "npipe_split": "30new",
+  "npipe_append": "bottom"
 }
 
 //connect to a mongodb database
 "*.mongo": {
   "npipe_start": "mongo",
-  "npipe_ft": "javascript"
+  "npipe_type": "c",
+  "npipe_ft": "javascript",
+  "npipe_append": "top"
 }
 
 // connect to a sqlite3 db
 "*.sql": {
   "npipe_start": "sqlite3 ~/mydb.db",
-  "npipe_split": "new"
+  "npipe_type": "c",
+  "npipe_split": "new",
+  "npipe_append": 0
 }
 
 // compile pug to html
 "templates/*.pug": {
   "npipe_com": "pug",
-  "npipe_ft": "html"
+  "npipe_type": "s",
+  "npipe_ft": "html",
+  "npipe_append": 0
 }
 
 // compile pug to javascript
 "src/*.pug": {
   "npipe_com": "pug -c",
-  "npipe_ft": "javascript"
+  "npipe_type": "s",
+  "npipe_ft": "javascript",
+  "npipe_append": 0
 }
 
 // connect to a mongodb instance with livescript
 "*.mongo.ls": {
   "npipe_com": "lsc -cpb | mongo",
+  "npipe_type": "s",
   "npipe_ft": "javascript",
-  "npipe_split": "50vnew"
+  "npipe_split": "50vnew",
+  "npipe_append": "bottom"
 }
 
 // view assembly for c files
 "*.c": {
   "npipe_com": "gcc -S -xc -c -o - -",
-  "npipe_ft": "asm"
+  "npipe_type": "s",
+  "npipe_ft": "asm",
+  "npipe_append": "top"
 }
 ```
 
@@ -282,12 +304,17 @@ will take care of all of that for us.
 
 " line range (13-26)
 :13,26NeoPipe
+
+" current line to bottom of the file
+:.,$NeoPipe
 ```
 
 NeoPipe provides two additional commands - ':NeoPipeClear' and ':NeoPipeClose'.
 ':NeoPipeClear', as the name implies, clears the output buffer. This is only
 useful if 'npipe\_append' is one of 'top' or 'bottom', otherwise it is done on
-every invocation of ':NeoPipe' anyway.
+every invocation of ':NeoPipe' anyway. ':NeoPipeClose' closes the output buffer
+and if npipe\_type is 'c', it will cancel the command. Any invocation of NeoPipe
+following ':NeoPipeClose' will be run from scratch.
 
 ```vim
 " clear the output buffer
@@ -300,8 +327,8 @@ every invocation of ':NeoPipe' anyway.
 Mappings
 ========
 
-NeoPipe privies on 'Plug' mapping which allows users to attach the NeoPipe
-command to an operator-pending action. This allows us to very quicly sned
+NeoPipe privies a 'Plug' mapping which allows users to attach the NeoPipe
+command to an operator-pending action. This allows us to very quickly send
 arbitrary regions of text to the command.
 
 ```vim
@@ -341,6 +368,7 @@ nmap ,tc :NeoPipeClear
 nmap ,tq :NeoPipeClose
 
 " visual selection
+" would actually run as :'<,'>NeoPipe
 vmap ,t :NeoPipe<cr>
 ```
 
