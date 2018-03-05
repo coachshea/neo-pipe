@@ -1,29 +1,30 @@
-*neopipe.txt*    Pass text shell command, see the results.
+*neopipe.txt*    Pipe text through shell command, see the results.
 
-                     _   _ _____ ___  ____ ___ ____  _____ 
-                    | \ | | ____/ _ \|  _ \_ _|  _ \| ____|
-                    |  \| |  _|| | | | |_) | || |_) |  _|  
-                    | |\  | |__| |_| |  __/| ||  __/| |___ 
-                    |_| \_|_____\___/|_|  |___|_|   |_____|
-                                                           
-
+              #     # ####### ####### ######  ### ######  ####### 
+              ##    # #       #     # #     #  #  #     # #       
+              # #   # #       #     # #     #  #  #     # #       
+              #  #  # #####   #     # ######   #  ######  #####   
+              #   # # #       #     # #        #  #       #       
+              #    ## #       #     # #        #  #       #       
+              #     # ####### ####### #       ### #       ####### 
+                                                                  
 
 Author:  John Shea <coachshea@fastmail.com>
 
 ==========================================================================
 Contents
 
-Introduction ............................. |neopipe-intro|
-Configuration ............................ |neopipe-configuration|
-  npipe_command .......................... |neopipe-npipe_com|
-  npipe_filetype ......................... |neopipe-npipe_ft|
-  npipe_split ............................ |neopipe-npipe_split|
-Commands ................................. |neopipe-commands|
-  NeoPipe ................................ |neopipe-NeoPipe-command|
-  NeoPipeClear ........................... |neopipe-NeoPipeClear-command|
-  NeoPipeClose ........................... |neopipe-NeoPipeClose-command|
-Examples ................................. |neopipe-examples|
-About .................................... |neopipe-about|
+  Introduction ............................. |neopipe-intro|
+  Configuration ............................ |neopipe-configuration|
+    npipe_command .......................... |neopipe-npipe_com|
+    npipe_filetype ......................... |neopipe-npipe_ft|
+    npipe_split ............................ |neopipe-npipe_split|
+  Commands ................................. |neopipe-commands|
+    NeoPipe ................................ |neopipe-:NeoPipe|
+    NeoPipeClear ........................... |neopipe-:NeoPipeClear|
+    NeoPipeClose ........................... |neopipe-:NeoPipeClose|
+  Examples ................................. |neopipe-examples|
+  About .................................... |neopipe-about|
 
 ==========================================================================
 INTRODUCTION                                    *neopipe-intro*
@@ -34,25 +35,33 @@ the output.
 ==========================================================================
 CONFIGURATION                                   *neopipe-configuration*
 
-*neopipe-npipe_com*
+                                *neopipe-npipe_com*
+npipe_com           Set this to any shell command that will take the
+                    contents of your buffer on STDIN, and eturn the
+                    result on STDOUT.
 
-pipe_com                Required! Set this to any shell command that will take
-the contents of your buffer on STDIN, and eturn the
-result on STDOUT.
-
-*neopipe-npipe_ft*
-
-pipe_ft                 The filetype of the output buffer. Useful for syntax
-highlighting of the result, or running arbitrary
-autocommands against it.
-
-*neopipe-pipe_type*
+                                *neopipe-pipe_type*
+npipe_type          Specifies how to run |neopipe-npipe_com|. Set to 'c' for
+                    meaning |neopipe-npipe_com| will be run once and all
+                    further text will run through it's output. 
 
 
+                                *neopipe-npipe_ft*
+npipe_ft            The filetype of the output buffer. Useful for syntax
+                    highlighting of the result, or running arbitrary
+                    autocommands against it.
 
-*neopipe-npipe_append*
+                                *neopipe-npipe_append*
+npipe_append        Whether to append text to the output buffer on each
+                    invocation or to clear the buffer each time. Possible
+                    values are "top" (appned each output to the top of the
+                    buffer), "bottom" (appned each output to the bottom of
+                    the buffer), any other value (i.e. 0, 1, "clear", '',
+                    etc) instructs neopope to clear the buffer on each
+                    invocation.
 
-*neopipe-npipe_split*
+                                *neopipe-npipe_split*
+npipe_split         How to display the scratch buffer.
 
 
 ==========================================================================
@@ -60,24 +69,21 @@ COMMANDS                                        *neopipe-commands*
 
 VimPipe offers three commands.
 
-*neopipe-NeoPipe-command*
-
-NeoPipe                 Run lines of text through the command
+                                *neopipe-:NeoPipe*
+NeoPipe             Run lines of text through the command
 
 Send the selected contents (entire buffer by defualt)
 through the command specified by |neopipe-npipe_com|
 and displays the results. The buffer does not need to be
 saved first.
 
-*neopipe-NeoPipeClear-command*
+                                *neopipe-:NeoPipeClear*
+NeoPipeClear        Clear the scractch buffer
 
-NeoPipeClear            Clear the scractch buffer
+                                *neopipe-:NeoPipeClose*
+NeoPipeClose        Close the scratch buffer.
 
-*neopipe-NeoPipeClose-command*
-
-NeoPipeClose            Close the scratch buffer.
-
-==============================================================================
+==========================================================================
 EXAMPLES                                         *neopipe-examples*
 
 The following are possible configurations. These can be set globally or on a
@@ -126,7 +132,7 @@ per-project bases:
   "pipe_start_adjust": 1
 }
 
-==============================================================================
+==========================================================================
 ABOUT                                           *neopipe-about*
 
 Grab the latest version or report a bug on GitHub:

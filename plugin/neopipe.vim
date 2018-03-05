@@ -4,7 +4,7 @@ endif
 let g:neopipe_plug = 1
 
 function! s:pipe(type)
-  '[, ']NeoPipe
+  call neopipe#pipe("'[", "']")
 endfunction
 
 command! -range=% NeoPipe call neopipe#pipe(<line1>,<line2>)
