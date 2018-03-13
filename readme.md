@@ -10,15 +10,14 @@
 Table of Contents
 =================
 
-
 <!-- vim-markdown-toc GFM -->
 
 * [Introduction](#introduction)
 * [Dependencies](#dependencies)
 * [Setup](#setup)
+  * [npipe\_com](#npipe_com)
   * [npipe\_type](#npipe_type)
   * [npipe\_append](#npipe_append)
-  * [npipe\_com](#npipe_com)
   * [npipe\_ft](#npipe_ft)
   * [npipe\_split](#npipe_split)
 * [Projections](#projections)
@@ -57,9 +56,9 @@ If you are not familiar with [projectionist], I strongly encourage you to
 check it out. It excels at project-level configuration.
 
 NeoPipe also provides an operator-pending mapping (see [mappings] sections)
-which works well with [textobj-user] by kana and all of the [related plugins]. If
-you are not yet familiar with these plugins, it is worth your time to check them
-out.
+which works well with [textobj-user] by kana and the [related plugins]. If
+you are not yet familiar with these plugins, they are worth your time to check
+them out.
 
 Setup
 =====
@@ -73,31 +72,31 @@ running for the duration of the session. Behind the scenes, this uses Neovim's
 
 The second option available to NeoPipe users is to define a command that takes
 each batch of text through it's stdin and which rights it's output to stdout.
-In this case, the 'system()' command is used on each invocation of NeoPipe.
+In this case, NeoPipe uses the 'system()' command on each invocation.
 
-The third options is to simply echo the selected lines in the output buffer.
-This feature could come in handy if a user was testing a user-defined motion or
-text object and wanted to make sure that the correct text was being selected.
+The third options is to echo the selected lines in the output buffer. This
+feature could come in handy if a user was testing a user-defined motion or
+text object and wanted to make sure that the plugin selected the correct text.
 
-Whichever method the user chooses, the output of the command will be sent to
-the output buffer. Users posses the ability to define the filetype, split,
+Whichever method the user chooses, the NeoPipe sends the output of the command
+to the output buffer. Users posses the ability to define the filetype, split,
 height/width, etc. of the output buffer.
 
 Users have the ability to set options at the buffer, projection (see
 [projectionist] by Tim Pope and the [projections] section of this document),
 or global level. NeoPipe will search for the options in that order and apply
-the first one that it finds. The examples that follow demonstrate setting each
-option at the buffer and global level. For examples of setting options in
-projections, see the [projections] section of this document. The following are
-the available options that collectively determine the behavior of NeoPipe.
-Technically, user do not need to set any of these options, but if none are set,
-text will simply be echoed to the output buffer that will be opened in a vertical
-split (evenly split) buffer with no filetype.
+the first one that it finds. The examples that follow demonstrate setting
+each option at the buffer and global level. For examples of setting options
+in projections, see the [projections] section of this document. The following
+are the available options that collectively determine the behavior of NeoPipe.
+Technically, user do not need to set any of these options, but if none are
+set, the text is simply echoed to the output buffer that will be opened in a
+vertical split (evenly split) buffer with no filetype.
 
 **Important Note**
 
-Once a variable is found at any level, it is set at the window level by
-NeoPipe. This is important because it allows us to work with different buffers
+Once NeoPipe finds a variable at any level, that variable is set at the window
+level. This is important because it allows us to work with different buffers
 and pipe the commands to a single output buffer. Let's say for example, that I
 am working on a sql project and call ':NeoPipe'. Let's further say that this
 command opens a sql database in the background for use with all subsequent
@@ -413,8 +412,8 @@ repeat action are the two that are repeatable.
 
 Worth noting, the operator-pending mode will, of course, work with any text
 object, including user-defined text-objects. The [textobj-user] and [related
-plugins] provide many useful text-objects which can be combined with the
-NeoPipe operator mapping. If, for example, a user is looking for repeatability
+plugins] provide many useful text-objects combine nicely with NeoPipe's
+operator mapping. If, for example, a user is looking for repeatability
 for the entire file (still not sure what the use would be), I suggest the
 [textobj-entire] plugin also by kana. There are many other useful user-defined
 text-objects available within that ecosystem. If you are not familiar with
