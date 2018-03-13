@@ -16,120 +16,229 @@ Contents
 
   Introduction ............................. |neopipe-intro|
   Configuration ............................ |neopipe-configuration|
-    npipe_command .......................... |neopipe-npipe_com|
-    npipe_filetype ......................... |neopipe-npipe_ft|
+    npipe_com .............................. |neopipe-npipe_com|
+    npipe_type ............................. |neopipe-npipe_type|
     npipe_split ............................ |neopipe-npipe_split|
+    npipe_ft ............................... |neopipe-npipe_ft|
+    npipe_append ........................... |neopipe-npipe_append|
+    npipe_sep .............................. |neopipe-npipe_sep|
   Commands ................................. |neopipe-commands|
     NeoPipe ................................ |neopipe-:NeoPipe|
     NeoPipeClear ........................... |neopipe-:NeoPipeClear|
     NeoPipeClose ........................... |neopipe-:NeoPipeClose|
+  Mappings ................................. |neopipe-mappings|
+    Plug Mappings .......................... |neopipe-plug-mappings|
+    Default Mappings ....................... |neopipe-default-mappings|
   Examples ................................. |neopipe-examples|
+    Global Examples ........................ |neopipe-global-examples|
+    Buffer Examples ........................ |neopipe-buffer-examples|
+    Projections Examples ................... |neopipe-projections-examples|
   About .................................... |neopipe-about|
 
 ==========================================================================
 INTRODUCTION                                    *neopipe-intro*
 
-neopipe sends the current buffer to a shell command, and instantly displays
-the output.
+NeoPipe sends the current buffer to a user-defined command, and instantly
+displays the output in a scratch buffer.
 
 ==========================================================================
 CONFIGURATION                                   *neopipe-configuration*
 
                                 *neopipe-npipe_com*
-npipe_com           Set this to any shell command that will take the
-                    contents of your buffer on STDIN, and eturn the
-                    result on STDOUT.
+npipe_com           The command through which text will be sent.
 
-                                *neopipe-pipe_type*
-npipe_type          Specifies how to run |neopipe-npipe_com|. Set to 'c' for
+                                *neopipe-npipe_type*
+npipe_type          Specifies how to run |neopipe-npipe_com|. Set to 'c'
                     meaning |neopipe-npipe_com| will be run once and all
-                    further text will run through it's output. 
+                    further text will run through it's output (i.e.
+                    continuous). Set to 's' and each invocation will be a
+                    "one-off" (i.e single). Set to anything else and the
+                    text will simply be echoed to the output buffer
+                    (negating the value of |neopipe-npipe_com|).
 
+                                *neopipe-npipe_split*
+npipe_split         How to display the scratch buffer. Values can be
+                    "vsplit", "split", or (less useful) "tabedit".
+                    Height/Width can also be set (i.e "24vsplit",
+                    "15split", etc.)
+                    Default: "vsplit"
 
                                 *neopipe-npipe_ft*
 npipe_ft            The filetype of the output buffer. Useful for syntax
-                    highlighting of the result, or running arbitrary
+                    highlighting of the result, or to run arbitrary
                     autocommands against it.
 
                                 *neopipe-npipe_append*
 npipe_append        Whether to append text to the output buffer on each
-                    invocation or to clear the buffer each time. Possible
-                    values are "top" (appned each output to the top of the
-                    buffer), "bottom" (appned each output to the bottom of
-                    the buffer), any other value (i.e. 0, 1, "clear", '',
-                    etc) instructs neopope to clear the buffer on each
-                    invocation.
+                    invocation of NeoPipe. Values are "top" (append each
+                    output to the top of the buffer), "bottom" (append
+                    each output to the bottom of the buffer), any other
+                    value (i.e. 0, 1, "clear", '', etc.) instructs NeoPipe
+                    to clear the buffer on each invocation.
 
-                                *neopipe-npipe_split*
-npipe_split         How to display the scratch buffer.
+                                *neopipe-npipe_sep*
+npipe_sep           Only relevant when |neopipe-npipe_append| is set to either
+                    "top" or "bottom". Determines
+
 
 
 ==========================================================================
 COMMANDS                                        *neopipe-commands*
 
-VimPipe offers three commands.
+NeoPipe offers three commands.
 
                                 *neopipe-:NeoPipe*
-NeoPipe             Run lines of text through the command
+:NeoPipe             Run lines of text through the command
 
-Send the selected contents (entire buffer by defualt)
+Send the selected contents (entire buffer by default)
 through the command specified by |neopipe-npipe_com|
 and displays the results. The buffer does not need to be
 saved first.
 
                                 *neopipe-:NeoPipeClear*
-NeoPipeClear        Clear the scractch buffer
+:NeoPipeClear        Clear the scratch buffer
 
                                 *neopipe-:NeoPipeClose*
-NeoPipeClose        Close the scratch buffer.
+:NeoPipeClose        Close the scratch buffer.
 
 ==========================================================================
-EXAMPLES                                         *neopipe-examples*
+Mappings                                        *neopipe-mappings*
 
-The following are possible configurations. These can be set globally or on a
-per-project bases:
+--------------------------------------------------------------------------
+Plug Mappings                                   *neopipe-plug-mappings*
 
-// compile livescript
+<plug>(neopipe-operator)
+        Places the user in operating pending mode, then sends the selected
+        lines through NeoPipe. Even for characterwise motions, any line
+        that is touched by the operator is sent in it's entirety.
+
+--------------------------------------------------------------------------
+Default Mappings                                *neopipe-default-mappings*
+
+To disable the default mappings: set g:neopipe_do_no_mappings = 1
+
+nmap ,t  <plug>(neopipe-operator)
+        A simple default for the plug operator described above
+
+nmap ,tt ,t_
+        Send the current line to Neopipe
+
+nnoremap ,tg :NeoPipe<cr>
+        Sends the current file to NeoPipe
+
+nnoremap ,tq :call neopipe#close()<cr>
+        Closes (and wipes) the output buffer, stops running any continuous
+        commands and unlets all window variables set by NeoPipe.
+
+nnoremap ,tc :call neopipe#clear_buffer()<cr>
+        Clears the output buffer
+
+xnoremap ,t  :NeoPipe<cr>
+        Sends the selected text through NeoPipe
+
+==========================================================================
+EXAMPLES                                        *neopipe-examples*
+
+The following are possible configurations. These can be set globally or
+on a per-project bases:
+
+
+--------------------------------------------------------------------------
+Global Examples                                 *neopipe-global-examples*
+
+let g:npipe_com = "zsh"
+let g:npipe_type = 'c'
+let g:npipe_split = "20split"
+let g:npipe_ft = "zsh"
+let g:npipe_append = "top"
+let g:npipe_sep = ['-----']
+
+--------------------------------------------------------------------------
+Buffer Examples                                 *neopipe-buffer-examples*
+
+au filetype sql let b:npipe_com = 'sqlite3 ~/db/myDatabase.db'
+au fileytpe sql let b:npipe_type = 'c'
+au fileytpe sql let b:npipe_split = "split"
+au filetype mongo let b:npipe_append=0
+
+au fileytpe mongo let b:npipe_com = "mongo"
+au fileytpe mongo let b:npipe_type = 'c'
+au fileytpe mongo let b:npipe_split = '25vsplit'
+au filetype mongo let b:npipe_ft="json"
+au filetype mongo let b:npipe_append="top"
+au filetype mongo let b:npipe_sep=[
+  \ '++++++',
+  \ '++++++'
+  \ ]
+
+au fileytpe livescript let b:npipe_com = 'lsc -cb'
+au fileytpe livescript let b:npipe_type='s'
+au filetype livescript let b:npipe_ft="javascript"
+au filetype livescript let b:npipe_append="bottom"
+au filetype livescript let b:npipe_sep=[
+  \ '',
+  \ '' ]
+
+--------------------------------------------------------------------------
+Projections Examples                        *neopipe-projections-examples*
+
+
+compile livescript
 "*.ls": {
-  "pipe_com": "lsc -cbp",
-  "pipe_ft": "javascript"
+  "npipe_com": "lsc -cbp",
+  "npipe_type": "s",
+  "npipe_ft": "javascript",
+  "npipe_split": "30new",
+  "npipe_append": "bottom"
 }
 
-// compile jade to javascript
-"src/*.jade": {
-  "pipe_com": "jade -c",
-  "pipe_ft": "javascript"
-}
-
-// compile jade to html
-"views/*.jade": {
-  "pipe_com": "jade -P",
-  "pipe_ft": "html"
-}
-
-// connect to a mongodb instance
+connect to a mongodb database
 "*.mongo": {
-  "pipe_com": "mongo db/test.db",
-  "pipe_ft": "javascript"
+  "npipe_start": "mongo",
+  "npipe_type": "c",
+  "npipe_ft": "javascript",
+  "npipe_append": "top"
 }
 
-// connect to a mongodb instance with livescript
-"*.mongo": {
-  "pipe_com": "lsc -cpb | mongo",
-  "pipe_ft": "javascript"
+connect to a sqlite3 db
+"*.sql": {
+  "npipe_start": "sqlite3 ~/mydb.db",
+  "npipe_type": "c",
+  "npipe_split": "new",
+  "npipe_append": 0
 }
 
-// view assembly for c files
+compile pug to html
+"templates/*.pug": {
+  "npipe_com": "pug",
+  "npipe_type": "s",
+  "npipe_ft": "html",
+  "npipe_append": 0
+}
+
+compile pug to javascript
+"src/*.pug": {
+  "npipe_com": "pug -c",
+  "npipe_type": "s",
+  "npipe_ft": "javascript",
+  "npipe_append": 0
+}
+
+connect to a mongodb instance with livescript
+"*.mongo.ls": {
+  "npipe_com": "lsc -cpb | mongo",
+  "npipe_type": "s",
+  "npipe_ft": "javascript",
+  "npipe_split": "50vnew",
+  "npipe_append": "bottom"
+}
+
+view assembly for c files
 "*.c": {
-  "pipe_com": "gcc -S -xc -c -o - -",
-  "pipe_ft": "asm"
-}
-
-// connect to a sqlite3 database with comments
-"db/*.sql": {
-  "pipe_com": "sqlite2 ~/mydata.db",
-  "pip_search_start": "^\#",
-  "pipe_start_adjust": 1
+  "npipe_com": "gcc -S -xc -c -o - -",
+  "npipe_type": "s",
+  "npipe_ft": "asm",
+  "npipe_append": "top"
 }
 
 ==========================================================================

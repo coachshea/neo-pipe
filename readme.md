@@ -168,8 +168,8 @@ invocation.
 
 ```vim
 let g:npipe_type='bottom'
-au filetype mongo let b:npipe_type='top'
-au filetype javascript let b:npipe_type=0
+au filetype mongo let b:npipe_append='top'
+au filetype javascript let b:npipe_append=0
 ```
 
 **Important Note**
