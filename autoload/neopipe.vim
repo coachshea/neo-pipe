@@ -151,6 +151,14 @@ function! neopipe#close()
     unlet! w:npipe_append
   endif
 
+  if exists('w:npipe_split')
+    unlet! w:npipe_split
+  endif
+
+  if exists('w:npipe_sep')
+    unlet! w:npipe_sep
+  endif
+
 endfunction
 "}}}
 " vim: foldmethod=marker:
