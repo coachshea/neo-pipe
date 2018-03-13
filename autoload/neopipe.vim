@@ -12,20 +12,27 @@ function! s:buffer_setup()
 
   let l:child = bufnr('%')
   wincmd p
-  let b:child = l:child
+  let w:child = l:child
 
-  call setbufvar(b:child, '&swapfile', 0)
-  call setbufvar(b:child, '&buftype', 'nofile')
-  call setbufvar(b:child, '&bufhidden', 'wipe')
-  call setbufvar(b:child, '&ft', s:find('npipe_ft', ''))
+  call setbufvar(w:child, '&swapfile', 0)
+  call setbufvar(w:child, '&buftype', 'nofile')
+  call setbufvar(w:child, '&bufhidden', 'wipe')
+  call setbufvar(w:child, '&ft', s:find('npipe_ft', ''))
 
 endfunction
 
 function! s:find(var, def)
 
+  " window-local
+  let l:var = get(w:, a:var)
+  if !empty(l:var)
+    return l:var
+  endif
+
   " buffer-local
   let l:var = get(b:, a:var)
   if !empty(l:var)
+    call setwinvar('', a:var, l:var)
     return l:var
   endif
 
@@ -34,7 +41,7 @@ function! s:find(var, def)
     let l:temp = projectionist#query_scalar(a:var)
     if !empty(l:temp)
       let l:var = l:temp[0]
-      call setbufvar('', a:var, l:var)
+      call setwinvar('', a:var, l:var)
       return l:var
     endif
   endif
@@ -42,12 +49,12 @@ function! s:find(var, def)
   " global
   let l:var = get(g:, a:var)
   if !empty(l:var)
-    call setbufvar('', a:var, l:var)
+    call setwinvar('', a:var, l:var)
     return l:var
   endif
 
   " default
-  call setbufvar('', a:var, a:def)
+  call setwinvar('', a:var, a:def)
   return a:def
 
 endfunction
@@ -67,17 +74,17 @@ function! s:apply_contents(contents)
 
   if l:append ==# 'top'
     let l:sep = s:find('npipe_sep', ['', '---'])
-    call nvim_buf_set_lines(b:child, 0, 0, 0, ['---'] + a:contents)
+    call nvim_buf_set_lines(w:child, 0, 0, 0, ['---'] + a:contents)
   elseif l:append ==# 'bottom'
-    call nvim_buf_set_lines(b:child, -1, -1, 0, a:contents + ['---'])
+    call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + ['---'])
     let l:switchbuf_before = &switchbuf
     set switchbuf=useopen
-    exe 'sbuffer' b:child
+    exe 'sbuffer' w:child
     exe line('$')
     wincmd p
     let &switchbuf = l:switchbuf_before
   else
-    call nvim_buf_set_lines(b:child, 0, -1, 0, a:contents)
+    call nvim_buf_set_lines(w:child, 0, -1, 0, a:contents)
   endif
 
 endfunction
@@ -88,7 +95,7 @@ function! neopipe#pipe(first, last)
 
   let l:lines = getline(a:first, a:last) + ['']
 
-  if !exists('b:child') || !buflisted(b:child)
+  if !exists('w:child') || !buflisted(w:child)
     call s:buffer_setup()
   endif
 
@@ -97,10 +104,10 @@ function! neopipe#pipe(first, last)
   let l:type = s:find('npipe_type', '')
    
   if l:type ==# 'c'
-    if !exists('b:npipe_job')
-      let b:npipe_job = jobstart(l:com, s:callbacks)
+    if !exists('w:npipe_job')
+      let w:npipe_job = jobstart(l:com, s:callbacks)
     endif
-    call jobsend(b:npipe_job, l:lines)
+    call jobsend(w:npipe_job, l:lines)
   elseif l:type ==# 's'
     call s:apply_contents(systemlist(l:com, l:lines))
   else
@@ -113,7 +120,7 @@ function! neopipe#clear_buffer()
 
   let l:switchbuf_before = &switchbuf
   set switchbuf=useopen
-  exe b:child . 'sbuffer'
+  exe w:child . 'sbuffer'
   %d _
   wincmd p
   let &switchbuf = l:switchbuf_before
@@ -122,26 +129,26 @@ endfunction
 
 function! neopipe#close()
 
-  if exists('b:child')
-    exe b:child . 'bw!'
-    unlet! b:child
+  if exists('w:child')
+    exe w:child . 'bw!'
+    unlet! w:child
   endif
 
-  if exists('b:npipe_job')
-    call jobstop(b:npipe_job)
-    unlet! b:npipe_job
+  if exists('w:npipe_job')
+    call jobstop(w:npipe_job)
+    unlet! w:npipe_job
   endif
 
-  if exists('b:npipe_com')
-    unlet! b:npipe_com
+  if exists('w:npipe_com')
+    unlet! w:npipe_com
   endif
 
-  if exists('b:npipe_type')
-    unlet! b:npipe_type
+  if exists('w:npipe_type')
+    unlet! w:npipe_type
   endif
 
-  if exists('b:npipe_append')
-    unlet! b:npipe_append
+  if exists('w:npipe_append')
+    unlet! w:npipe_append
   endif
 
 endfunction
