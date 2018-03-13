@@ -71,10 +71,9 @@ open a database, a repl, or any other command that the user wants to keep
 running for the duration of the session. Behind the scenes, this uses Neovim's
 'jobstart()' function.
 
-The second option available to NeoPipe users is to define a command that will
-takes each batch of text through it's stdin and which rights it's output
-to stdout. In this case, the 'system()' command is used on each invocation of
-NeoPipe.
+The second option available to NeoPipe users is to define a command that takes
+each batch of text through it's stdin and which rights it's output to stdout.
+In this case, the 'system()' command is used on each invocation of NeoPipe.
 
 The third options is to simply echo the selected lines in the output buffer.
 This feature could come in handy if a user was testing a user-defined motion or
@@ -94,6 +93,23 @@ the available options that collectively determine the behavior of NeoPipe.
 Technically, user do not need to set any of these options, but if none are set,
 text will simply be echoed to the output buffer that will be opened in a vertical
 split (evenly split) buffer with no filetype.
+
+**Important Note**
+
+Once a variable is found at any level, it is set at the window level by
+NeoPipe. This is important because it allows us to work with different buffers
+and pipe the commands to a single output buffer. Let's say for example, that I
+am working on a sql project and call ':NeoPipe'. Let's further say that this
+command opens a sql database in the background for use with all subsequent
+commands. I send a few commands to ':NeoPipe', then I switch to a new buffer
+in the same window next to the output buffer and execute another ':NeoPipe'.
+It would be jarring if another output buffer opened and a separate instance
+of sql (sqlite, mysql, etc.) was started. What I would most likely want is
+to send commands to the existing sql instance and see the output in the
+existing output buffer. If, at any time, I desire to start fresh, I simply
+call ':NeoPipeClose' and when I next call ':NeoPipe', I will be starting
+fresh. If I need to keep two (or more) separate 'command buffer / output
+buffer' combinations going at once, I can open them in separate tabs.
 
 npipe\_com
 ----------
@@ -160,7 +176,7 @@ au filetype javascript let b:npipe_type=0
 
 If a user always desired to clear the buffer on each invocation, then it is
 simple enough not to set this variable at all. But remember, all variables are
-search at the buffer, then projection, then global levels. If somewhere up
+searched at the buffer, then projection, then global levels. If somewhere up
 the "food chain" this variable was set then it would affect all lower level
 buffers until overwritten by a "closer" variable. Therefore, it is often a
 good idea to be explicit. Because the actual value does not matter except for
@@ -196,8 +212,8 @@ au filetype vim let b:npipe_split = 'vnew'
 ```
 
 It is also possible to specify a height or width by supplying a number to the
-split or vsplit (respectively) command. The default values of will split the
-window equally. Below are examples of more explicit splitting behavior.
+split or vsplit (respectively) command. By default Vim splits each window
+equally. Below are examples of more explicit splitting behavior.
 
 ```vim
 let g:npipe_split = '40vnew'
