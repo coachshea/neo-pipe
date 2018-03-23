@@ -59,13 +59,17 @@ function! s:find(var, def)
 
 endfunction
 
+function! s:err(id, data, event)
+  echom printf('error: %s', join(a:data))
+endfunction
+
 function! s:out(id, data, event)
   call s:apply_contents(a:data[:-2])
 endfunction
 
 let s:callbacks = {
       \ 'on_stdout': function('s:out'),
-      \ 'on_stderr': function('s:out')
+      \ 'on_stderr': function('s:err')
       \ }
 
 function! s:apply_contents(contents)
