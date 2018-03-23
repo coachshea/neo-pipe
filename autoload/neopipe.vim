@@ -80,6 +80,7 @@ function! s:apply_contents(contents)
     let l:sep = s:find('npipe_sep', ['', '---'])
     call nvim_buf_set_lines(w:child, 0, 0, 0, ['---'] + a:contents)
   elseif l:append ==# 'bottom'
+    let l:sep = s:find('npipe_sep', ['', '---'])
     call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + ['---'])
     let l:switchbuf_before = &switchbuf
     set switchbuf=useopen

@@ -29,7 +29,6 @@ Table of Contents
 <!-- vim-markdown-toc -->
 
 [projectionist]: https://github.com/tpope/vim-projectionist
-[npipe_start]: #npipe_start
 [npipe_com]: #npipe_com
 [npipe_ft]: #npipe_ft
 [mappings]: #mappings

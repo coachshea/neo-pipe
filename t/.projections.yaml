@@ -21,7 +21,12 @@
   npipe_type: 'c'
   npipe_append: 'bottom'
   npipe_split: '15split'
-"*.c":
+'*.c':
   npipe_com: 'gcc -S -xc -c -o - -'
   npipe_type: 's'
   npipe_ft: 'asm'
+'*.ruby':
+  npipe_com: 'pry --noprompt --no-pager --no-color'
+  npipe_type: 's'
+  npipe_split: 'rightbelow split'
+  npipe_append: 'top'
