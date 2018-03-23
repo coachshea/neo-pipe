@@ -252,7 +252,7 @@ included in a '.projections.json' file in the root directory of a project.
 
 //connect to a mongodb database
 "*.mongo": {
-  "npipe_start": "mongo",
+  "npipe_com": "mongo",
   "npipe_type": "c",
   "npipe_ft": "javascript",
   "npipe_append": "top"
@@ -260,7 +260,7 @@ included in a '.projections.json' file in the root directory of a project.
 
 // connect to a sqlite3 db
 "*.sql": {
-  "npipe_start": "sqlite3 ~/mydb.db",
+  "npipe_com": "sqlite3 ~/mydb.db",
   "npipe_type": "c",
   "npipe_split": "new",
   "npipe_append": 0
