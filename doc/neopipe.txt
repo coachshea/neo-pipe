@@ -77,8 +77,9 @@ npipe_append        Whether to append text to the output buffer on each
                     to clear the buffer on each invocation.
 
                                 *neopipe-npipe_sep*
-npipe_sep           Only relevant when |neopipe-npipe_append| is set to either
-                    "top" or "bottom". Determines
+npipe_sep           An array of lines used to space output lines in the
+                    output buffer. Only relevant when |neopipe-npipe_append|
+                    is set to either "top" or "bottom". 
 
 
 

@@ -8,7 +8,7 @@ function! s:buffer_setup()
    
   let l:bufname = bufname( '%' ) . ' [NeoPipe]'
 
-  exe printf('%s %s', s:find('npipe_split', 'vsplit'), l:bufname)
+  exe printf('%s %s', s:find('npipe_split', 'vsplit', 0), l:bufname)
 
   let l:child = bufnr('%')
   wincmd p
@@ -17,11 +17,11 @@ function! s:buffer_setup()
   call setbufvar(w:child, '&swapfile', 0)
   call setbufvar(w:child, '&buftype', 'nofile')
   call setbufvar(w:child, '&bufhidden', 'wipe')
-  call setbufvar(w:child, '&ft', s:find('npipe_ft', ''))
+  call setbufvar(w:child, '&ft', s:find('npipe_ft', '', 0))
 
 endfunction
 
-function! s:find(var, def)
+function! s:find(var, def, arr)
 
   " window-local
   let l:var = get(w:, a:var)
@@ -40,7 +40,7 @@ function! s:find(var, def)
   if exists('b:projectionist')
     let l:temp = projectionist#query_scalar(a:var)
     if !empty(l:temp)
-      let l:var = l:temp[0]
+      let l:var = a:arr ? l:temp : l:temp[0]
       call setwinvar('', a:var, l:var)
       return l:var
     endif
@@ -74,14 +74,14 @@ let s:callbacks = {
 
 function! s:apply_contents(contents)
 
-  let l:append = s:find('npipe_append', '')
+  let l:append = s:find('npipe_append', '', 0)
 
   if l:append ==# 'top'
-    let l:sep = s:find('npipe_sep', ['', '---'])
-    call nvim_buf_set_lines(w:child, 0, 0, 0, ['---'] + a:contents)
+    let l:sep = s:find('npipe_sep', ['', '---'], 1)
+    call nvim_buf_set_lines(w:child, 0, 0, 0, l:sep + a:contents)
   elseif l:append ==# 'bottom'
-    let l:sep = s:find('npipe_sep', ['', '---'])
-    call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + ['---'])
+    let l:sep = s:find('npipe_sep', ['', '---'], 1)
+    call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + l:sep)
     let l:switchbuf_before = &switchbuf
     set switchbuf=useopen
     exe 'sbuffer' w:child
@@ -104,9 +104,9 @@ function! neopipe#pipe(first, last)
     call s:buffer_setup()
   endif
 
-  let l:com = s:find('npipe_com', '')
+  let l:com = s:find('npipe_com', '', 0)
    
-  let l:type = s:find('npipe_type', '')
+  let l:type = s:find('npipe_type', '', 0)
    
   if l:type ==# 'c'
     if !exists('w:npipe_job')

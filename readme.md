@@ -228,6 +228,18 @@ documentation for further details:
 :h +cmd
 ```
 
+npipe\_sep
+==========
+
+The npipe\_sep option defines an array of lines used to separate each group of
+output lines in the scratch buffer. Only relevant if `npipe_append` is set to
+`top` or `bottom`.
+
+```vim
+let g:npipe_sep=['', '---'] " default value
+au filetype mongo let b:npipe_sep=[] " no sep
+```
+
 Projections
 ===========
 
