@@ -229,7 +229,7 @@ documentation for further details:
 ```
 
 npipe\_sep
-==========
+----------
 
 The npipe\_sep option defines an array of lines used to separate each group of
 output lines in the scratch buffer. Only relevant if `npipe_append` is set to
@@ -238,6 +238,18 @@ output lines in the scratch buffer. Only relevant if `npipe_append` is set to
 ```vim
 let g:npipe_sep=['', '---'] " default value
 au filetype mongo let b:npipe_sep=[] " no sep
+```
+
+npipe\_pty
+----------
+
+Some continuous commands appear to run more smoothly when `pty` is set to 1 in
+the `jobstart` callback function. `pry` for ruby programming is one. Like all
+options this can be set at the buffer, projection, or global levels.
+
+```vim
+let g:npipe_pty = 0 " default
+au filetype ruby let b:npipe_pty = 1
 ```
 
 Projections

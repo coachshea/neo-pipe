@@ -22,6 +22,7 @@ Contents
     npipe_ft ............................... |neopipe-npipe_ft|
     npipe_append ........................... |neopipe-npipe_append|
     npipe_sep .............................. |neopipe-npipe_sep|
+    npipe_pty .............................. |neopipe-npipe_pty|
   Commands ................................. |neopipe-commands|
     NeoPipe ................................ |neopipe-:NeoPipe|
     NeoPipeClear ........................... |neopipe-:NeoPipeClear|
@@ -81,6 +82,11 @@ npipe_sep           An array of lines used to space output lines in the
                     output buffer. Only relevant when |neopipe-npipe_append|
                     is set to either "top" or "bottom". 
 
+                                *neopipe-npipe_pty*
+npipe_pty           If set to one, 'pty=1' will be included in the jobstart
+                    callback. Only relevent when |neopipe-npipe_type| is set
+                    to 'c'. This is known to be relevant for 'pry' in ruby
+                    programming.
 
 
 ==========================================================================
