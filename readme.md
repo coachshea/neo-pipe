@@ -10,6 +10,7 @@
 Table of Contents
 =================
 
+
 <!-- vim-markdown-toc GFM -->
 
 * [Introduction](#introduction)
@@ -20,6 +21,8 @@ Table of Contents
   * [npipe\_append](#npipe_append)
   * [npipe\_ft](#npipe_ft)
   * [npipe\_split](#npipe_split)
+  * [npipe\_sep](#npipe_sep)
+  * [npipe\_pty](#npipe_pty)
 * [Projections](#projections)
 * [Commands](#commands)
 * [Mappings](#mappings)
