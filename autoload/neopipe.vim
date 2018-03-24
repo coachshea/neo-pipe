@@ -60,7 +60,7 @@ function! s:find(var, def, arr)
 endfunction
 
 function! s:err(id, data, event)
-  echom printf('error: %s', join(a:data))
+  echoe printf('error: %s', join(a:data))
 endfunction
 
 function! s:out(id, data, event)
@@ -70,29 +70,38 @@ endfunction
 let s:callbacks = {
       \ 'on_stdout': function('s:out'),
       \ 'on_stderr': function('s:err'),
-      \ 'pty': 1
       \ }
 
 function! s:apply_contents(contents)
 
-  let l:append = s:find('npipe_append', '', 0)
+  let l:type = s:find('npipe_type', 0, 0)
 
-  if l:append ==# 'top'
-    let l:sep = s:find('npipe_sep', ['', '---'], 1)
-    call nvim_buf_set_lines(w:child, 0, 0, 0, l:sep + a:contents)
-  elseif l:append ==# 'bottom'
-    let l:sep = s:find('npipe_sep', ['', '---'], 1)
-    call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + l:sep)
-    let l:switchbuf_before = &switchbuf
-    set switchbuf=useopen
-    exe 'sbuffer' w:child
-    exe line('$')
-    wincmd p
-    let &switchbuf = l:switchbuf_before
-  else
-    call nvim_buf_set_lines(w:child, 0, -1, 0, a:contents)
+    let l:append = s:find('npipe_append', '', 0)
+
+    if l:append ==# 'top'
+      let l:sep = s:find('npipe_sep', ['', '---'], 1)
+      call nvim_buf_set_lines(w:child, 0, 0, 0, l:sep + a:contents)
+    elseif l:append ==# 'bottom'
+      let l:sep = s:find('npipe_sep', ['', '---'], 1)
+      call nvim_buf_set_lines(w:child, -1, -1, 0, a:contents + l:sep)
+      let l:switchbuf_before = &switchbuf
+      set switchbuf=useopen
+      exe 'sbuffer' w:child
+      exe line('$')
+      wincmd p
+      let &switchbuf = l:switchbuf_before
+    else
+      call nvim_buf_set_lines(w:child, 0, -1, 0, a:contents)
+    endif
+
   endif
 
+endfunction
+
+function! s:term_after(id, data, event)
+  exe w:child . "wincmd w"
+  exe line('$')
+  wincmd p
 endfunction
 "}}}
 
@@ -101,39 +110,63 @@ function! neopipe#pipe(first, last)
 
   let l:lines = getline(a:first, a:last) + ['']
 
-  if !exists('w:child') || !buflisted(w:child)
-    call s:buffer_setup()
-  endif
+  let l:type = s:find('npipe_type', '', 0)
 
   let l:com = s:find('npipe_com', '', 0)
-   
-  let l:type = s:find('npipe_type', '', 0)
-   
-  if l:type ==# 'c'
+
+  if s:find('npipe_pty', 0, 0)
+    echoe "npipe_pty is depreecated"
+    echoe "set npipe_type='t'"
+    let w:npipe_type = 't'
+  endif
+
+  if l:type ==# 't'
     if !exists('w:npipe_job')
-      let l:callbacks = deepcopy(s:callbacks)
-      if s:find('npipe_pty', 0, 0)
-        let l:callbacks['pty'] = 1
-      endif
-      let w:npipe_job = jobstart(l:com, s:callbacks)
+      echom 'found'
+      let l:bufname = bufname( '%' ) . ' [NeoPipe]'
+
+      exe printf('%s %s', s:find('npipe_split', 'vsplit', 0), l:bufname)
+
+      let l:child = bufnr('%')
+      let l:npipe_job = termopen(l:com, {'on_stdout': function('s:term_after'), 'on_stderr': function('s:err') })
+      wincmd p
+      let w:npipe_job = l:npipe_job
+      let w:child = l:child
     endif
-    call jobsend(w:npipe_job, l:lines)
-  elseif l:type ==# 's'
-    call s:apply_contents(systemlist(l:com, l:lines))
+    echom 'send'
+    call jobsend(w:npipe_job, l:lines) 
   else
-    call s:apply_contents(l:lines[:-2])
+    if !exists('w:child') || !buflisted(w:child)
+      call s:buffer_setup()
+    endif
+    if l:type ==# 'c'
+      if !exists('w:npipe_job')
+        let l:callbacks = deepcopy(s:callbacks)
+        if s:find('npipe_pty', 0, 0)
+          let l:callbacks['pty'] = 1
+        endif
+        let w:npipe_job = jobstart(l:com, s:callbacks)
+      endif
+      call jobsend(w:npipe_job, l:lines)
+    elseif l:type ==# 's'
+      call s:apply_contents(systemlist(l:com, l:lines))
+    else
+      call s:apply_contents(l:lines[:-2])
+    endif
   endif
 
 endfunction
 
 function! neopipe#clear_buffer()
 
-  let l:switchbuf_before = &switchbuf
-  set switchbuf=useopen
-  exe w:child . 'sbuffer'
-  %d _
-  wincmd p
-  let &switchbuf = l:switchbuf_before
+  if w:npipe_type !=# 't'
+    let l:switchbuf_before = &switchbuf
+    set switchbuf=useopen
+    exe w:child . 'sbuffer'
+    %d _
+    wincmd p
+    let &switchbuf = l:switchbuf_before
+  endif
 
 endfunction
 

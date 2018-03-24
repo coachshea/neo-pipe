@@ -31,10 +31,9 @@
     "npipe_ft": "asm"
   },
   "*.ruby": {
-    "npipe_com": "pry --noprompt --no-pager --no-color",
-    "npipe_type": "c",
+    "npipe_com": "pry --no-pager",
+    "npipe_type": "t",
     "npipe_split": "rightbelow split",
-    "npipe_append": "top",
-    "npipe_pty": 1
+    "npipe_append": "top"
   }
 }
