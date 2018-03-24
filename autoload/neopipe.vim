@@ -69,7 +69,8 @@ endfunction
 
 let s:callbacks = {
       \ 'on_stdout': function('s:out'),
-      \ 'on_stderr': function('s:err')
+      \ 'on_stderr': function('s:err'),
+      \ 'pty': 1
       \ }
 
 function! s:apply_contents(contents)
@@ -110,6 +111,10 @@ function! neopipe#pipe(first, last)
    
   if l:type ==# 'c'
     if !exists('w:npipe_job')
+      let l:callbacks = deepcopy(s:callbacks)
+      if s:find('npipe_pty', 0, 0)
+        let l:callbacks['pty'] = 1
+      endif
       let w:npipe_job = jobstart(l:com, s:callbacks)
     endif
     call jobsend(w:npipe_job, l:lines)
@@ -134,14 +139,14 @@ endfunction
 
 function! neopipe#close()
 
-  if exists('w:child')
-    exe w:child . 'bw!'
-    unlet! w:child
-  endif
-
   if exists('w:npipe_job')
     call jobstop(w:npipe_job)
     unlet! w:npipe_job
+  endif
+
+  if exists('w:child')
+    exe w:child . 'bw!'
+    unlet! w:child
   endif
 
   if exists('w:npipe_com')

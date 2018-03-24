@@ -27,6 +27,7 @@
   npipe_ft: 'asm'
 '*.ruby':
   npipe_com: 'pry --noprompt --no-pager --no-color'
-  npipe_type: 's'
+  npipe_type: 'c'
   npipe_split: 'rightbelow split'
   npipe_append: 'top'
+  npipe_pty: 1
