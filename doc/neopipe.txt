@@ -22,7 +22,6 @@ Contents
     npipe_ft ............................... |neopipe-npipe_ft|
     npipe_append ........................... |neopipe-npipe_append|
     npipe_sep .............................. |neopipe-npipe_sep|
-    npipe_pty .............................. |neopipe-npipe_pty|
   Commands ................................. |neopipe-commands|
     NeoPipe ................................ |neopipe-:NeoPipe|
     NeoPipeClear ........................... |neopipe-:NeoPipeClear|
@@ -52,10 +51,13 @@ npipe_com           The command through which text will be sent.
 npipe_type          Specifies how to run |neopipe-npipe_com|. Set to 'c'
                     meaning |neopipe-npipe_com| will be run once and all
                     further text will run through it's output (i.e.
-                    continuous). Set to 's' and each invocation will be a
-                    "one-off" (i.e single). Set to anything else and the
-                    text will simply be echoed to the output buffer
-                    (negating the value of |neopipe-npipe_com|).
+                    continuous). The 't' setting is similar to 'c', but
+                    with 't', NeoPipe will open a terminal with the
+                    |neopipe-npipe_com| command instead of an output buffer.
+                    Set to 's' and each invocation will be a "one-off"
+                    (i.e single). Set to anything else and the text will
+                    simply be echoed to the output buffer (negating the
+                    value of |neopipe-npipe_com|).
 
                                 *neopipe-npipe_split*
 npipe_split         How to display the scratch buffer. Values can be
@@ -81,13 +83,6 @@ npipe_append        Whether to append text to the output buffer on each
 npipe_sep           An array of lines used to space output lines in the
                     output buffer. Only relevant when |neopipe-npipe_append|
                     is set to either "top" or "bottom". 
-
-                                *neopipe-npipe_pty*
-npipe_pty           If set to one, 'pty=1' will be included in the jobstart
-                    callback. Only relevent when |neopipe-npipe_type| is set
-                    to 'c'. This is known to be relevant for 'pry' in ruby
-                    programming.
-
 
 ==========================================================================
 COMMANDS                                        *neopipe-commands*

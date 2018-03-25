@@ -10,7 +10,6 @@
 Table of Contents
 =================
 
-
 <!-- vim-markdown-toc GFM -->
 
 * [Introduction](#introduction)
@@ -22,7 +21,6 @@ Table of Contents
   * [npipe\_ft](#npipe_ft)
   * [npipe\_split](#npipe_split)
   * [npipe\_sep](#npipe_sep)
-  * [npipe\_pty](#npipe_pty)
 * [Projections](#projections)
 * [Commands](#commands)
 * [Mappings](#mappings)
@@ -33,6 +31,7 @@ Table of Contents
 
 [projectionist]: https://github.com/tpope/vim-projectionist
 [npipe_com]: #npipe_com
+[npipe_type]: #npipe_type
 [npipe_ft]: #npipe_ft
 [mappings]: #mappings
 [projections]: #projections
@@ -65,16 +64,17 @@ them out.
 Setup
 =====
 
-Neopipe allows users to interact with their commands in one of three ways.
+Neopipe allows users to interact with their commands in one of four ways.
 First, users can define a long running command through which all subsequent
-text will be piped. This can be as simple as opening a shell or it could
-open a database, a repl, or any other command that the user wants to keep
-running for the duration of the session. Behind the scenes, this uses Neovim's
-'jobstart()' function.
+text will be piped. This can be as simple as opening a shell or it could open
+a database, a repl, or any other command that the user wants to keep running
+for the duration of the session. NeoPipe actually provides two ways to work
+with long-running commands (see the section [npipe\_type](#npipe_type) for
+details). One uses `jobstart()` behinds the scenes and one uses `termopen()`.
 
-The second option available to NeoPipe users is to define a command that takes
+The second method available to NeoPipe users is to define a command that takes
 each batch of text through it's stdin and which rights it's output to stdout.
-In this case, NeoPipe uses the 'system()' command on each invocation.
+In this case, NeoPipe uses the `system()` command on each invocation.
 
 The third options is to echo the selected lines in the output buffer. This
 feature could come in handy if a user was testing a user-defined motion or
@@ -115,7 +115,7 @@ buffer' combinations going at once, I can open them in separate tabs.
 npipe\_com
 ----------
 
-The npipe\_com command is the actual command through which the text will be
+The `npipe_com` command is the actual command through which the text will be
 sent, either continuously running or through a series of one-offs.
 
 ```vim
@@ -130,17 +130,36 @@ au fileytpe livescript let b:npipe_com = 'lsc -cb'
 npipe\_type
 -----------
 
-NeoPipe's most fundamental option. This options tells NeoPipe if the command
-is to be run once and all subsequent text will be piped through it's output
-or if each invocation of NeoPipe will send the selected text through the
-command. For continuously running a command set this option to 'c', to run the
-command on each invocation, set it to 's'. If npipe\_type is not set or set to
-anything else, it is treated as echoing and npipe\_com will be ignored. For
-example
+NeoPipe's most fundamental option. This options tells NeoPipe how to interact
+with `npipe_com`. The 'c' option, which stands for "continuous" is one of two
+commands in the continuous family. Behind the scenes this option tells NeoPipe
+to use nvim's `jobstart()` function to open a long running command and to
+then pipe all subsequent text through this command and display the results to
+the output buffer. The second option, which is also a continuously running
+command is the 't' option, which stands for "terminal". The options instructs
+NeoPipe to use the `termopen()` function. This is similar too the 'c' option
+but the output buffer will simply be a terminal. NeoPipe user can still set
+the [npipe\_split](#npipe_split) option, but the [npipe\_ft](#npipe_ft),
+[npipe\_append](#npipe_append), and [npipe\_sep](#npipe\_sep) options are
+ignored. Some repl's work better with this setting (`pry` for ruby developers
+is one program known to work better this way).
+
+The 's' setting, which stands for "single", leads NeoPipe to send each batch
+of text through the command separately. In other words, each call to NeoPipe
+is a "single" invocation of the command.
+
+If `npipe_type` is not set, NeoPipe will simply echo the text in the scratch
+buffer. In this situation, any value set on `npipe_com` will be ignored. It
+is certainly fine to leave `npipe_type` unset if echoing is desired, but in
+most cases NeoPipe's true power comes from the combination of `npipe_com` and
+`npipe_type`.
 
 ```vim
 " run the command continuously
 let g:npipe_type='c'
+
+" run command in a terminal buffer
+au filetype ruby let b:npipe_type='t'
 
 " run the command each time
 au fileytpe coffe let b:npipe_type='s'
@@ -149,23 +168,15 @@ au fileytpe coffe let b:npipe_type='s'
 au filetype txt let b:npipe_type=0
 ```
 
-**Important Note**
-
-If both npipe\_com and npipe\_type are not set, NeoPipe will simply echo the
-text in the scratch buffer. These two commands collectively determine the
-principle behavior of this NeoPipe. It is certainly fine to leave either/both
-unset if echoing is desired, but in most cases NeoPipe's true power comes from
-the skillful utilization of these two options.
-
 npipe\_append
 -------------
 
 This variable informs NeoPipe of whether to clear the buffer for each
 invocation, or to append each subsequent write of the output buffer. The text
 can be appended to the top or bottom of the buffer by setting this to 'top' or
-'bottom' respectively. If npipe\_append in not set, or set to anything other
+'bottom' respectively. If `npipe_append` in not set, or set to anything other
 than 'top' or 'bottom', then the buffer is cleared and rewritten on each
-invocation.
+invocation. If `npipe_type` is set to 't' then this option is ignored.
 
 ```vim
 let g:npipe_type='bottom'
@@ -188,9 +199,10 @@ string, or to anything that helps them remember the intent (i.e. 'clear',
 npipe\_ft
 -----------
 
-The npipe\_ft command sets the filetype of the output buffer. For example, if we are
-pumping text through a mongodb database, we would likely want the output to
-have json syntax highlighting.
+The `npipe_ft` command sets the filetype of the output buffer. For example,
+if we are pumping text through a mongodb database, we would likely want the
+output to have json syntax highlighting. If `npipe_type` is set to 't' then
+this option is ignored.
 
 ```javascript
 {
@@ -201,11 +213,13 @@ have json syntax highlighting.
 npipe\_split
 ------------
 
-The npipe\_split option is 'vnew' by default. Meaning, the output buffer will
-be shown in a vertically and evenly split window. As with all options, this
-can be set on the buffer, projection or global levels. The option can be
-either 'new', 'vnew' (default), or 'tabnew'. It's hard to imagine a use case
-for 'tabnew', but it is available.
+The `npipe_split` option is `vnew` by default. Meaning, the output buffer
+will be shown in a vertically and evenly split window. As with all options,
+this can be set on the buffer, projection or global levels. The option can be
+either 'new', `vnew` (default), or `tabnew`. It's hard to imagine a use case
+for `tabnew`, but it is available. When `npipe_type` is set to 't', the buffer
+is split before the call to `termopen()`, and therefore, this value is still
+relevant.
 
 ```vim
 let g:npipe_split = 'new'
@@ -236,23 +250,11 @@ npipe\_sep
 
 The npipe\_sep option defines an array of lines used to separate each group of
 output lines in the scratch buffer. Only relevant if `npipe_append` is set to
-`top` or `bottom`.
+`top` or `bottom`. If `npipe_type` is set to 't' then this option is ignored.
 
 ```vim
 let g:npipe_sep=['', '---'] " default value
 au filetype mongo let b:npipe_sep=[] " no sep
-```
-
-npipe\_pty
-----------
-
-Some continuous commands appear to run more smoothly when `pty` is set to 1 in
-the `jobstart` callback function. `pry` for ruby programming is one. Like all
-options this can be set at the buffer, projection, or global levels.
-
-```vim
-let g:npipe_pty = 0 " default
-au filetype ruby let b:npipe_pty = 1
 ```
 
 Projections
@@ -274,6 +276,13 @@ included in a '.projections.json' file in the root directory of a project.
   "npipe_ft": "javascript",
   "npipe_split": "30new",
   "npipe_append": "bottom"
+}
+
+// work with ruby through pry
+"*.rb": {
+  "npipe_com": "pry --no-pager",
+  "npipe_type": "t",
+  "npipe_split": "rightbelow split"
 }
 
 //connect to a mongodb database
@@ -329,11 +338,13 @@ included in a '.projections.json' file in the root directory of a project.
 Commands
 ========
 
-The most basic command that NeoPipe provides is the ':NeoPipe' command. This is
-the command that sends text from the current buffer to the output buffer. If the
-output buffer is not yet created, it will automatically create it, and if the
-command type (i.e. npipe\_type) is 'c' (i.e. continuous), the ':NeoPipe' command
-will take care of all of that for us.
+The most basic command that NeoPipe provides is the ':NeoPipe' command. This
+is the command that sends text from the current buffer to the output buffer.
+If the output buffer is not yet created, it will automatically create it, and
+if the command type (i.e. `npipe_type`) is 'c' or 't' (i.e. "continuous" or
+"terminal"), the ':NeoPipe' command will take care of all of that for us. By
+default, `:NeoPipe` sends the current line of text through the `npipe_com`
+command, but `:NeoPipe` also accepts a range.
 
 ```vim
 " whole file
@@ -352,12 +363,13 @@ will take care of all of that for us.
 :.,$NeoPipe
 ```
 
-NeoPipe provides two additional commands - ':NeoPipeClear' and ':NeoPipeClose'.
-':NeoPipeClear', as the name implies, clears the output buffer. This is only
-useful if 'npipe\_append' is one of 'top' or 'bottom', otherwise it is done on
-every invocation of ':NeoPipe' anyway. ':NeoPipeClose' closes the output buffer
-and if npipe\_type is 'c', it will cancel the command. Any invocation of NeoPipe
-following ':NeoPipeClose' will be run from scratch.
+NeoPipe provides two additional commands - `:NeoPipeClear` and
+`:NeoPipeClose`. `:NeoPipeClear`, as the name implies, clears the output
+buffer. This is only useful if `npipe_append` is one of 'top' or 'bottom',
+otherwise it is done on every invocation of `:NeoPipe` anyway. ':NeoPipeClose'
+closes the output buffer and if `npipe_type` is 'c', it will cancel the
+command. Any invocation of `:NeoPipe` following `:NeoPipeClose` will be run
+from scratch.
 
 ```vim
 " clear the output buffer
@@ -391,7 +403,7 @@ selection is included in full.
 Default Mappings
 ----------------
 
-By defualt, NeoPipe provides the following convenience mappings:
+By default, NeoPipe provides the following convenience mappings:
 
 
 ```vim
@@ -415,7 +427,7 @@ nmap ,tq :NeoPipeClose
 vmap ,t :NeoPipe<cr>
 ```
 
-If this is not desired simply include the following in your init.vim
+If this is not desired simply include the following in your `init.vim`
 
 ```vim
 let g:neopipe_do_no_mappings=1
@@ -429,7 +441,7 @@ are naturally repeatable, no external plugins are required because they work
 with Vim's natural motions. The other commands are not. A great deal of thought
 went into this, but the rationale is as follows: it is perfectly understandable
 that a user might be working with a pre-existing file and chose to move around
-and send various lines/ranges to the ':NeoPipe' command. However, it is doubtful
+and send various lines/ranges to the `:NeoPipe` command. However, it is doubtful
 that a user would want to send an entire file to the command twice without some
 modifications in between (what would be the point). It is equally doubtful that
 anyone would need to clear or close a buffer twice without intervening events.
@@ -446,6 +458,3 @@ text-objects available within that ecosystem. If you are not familiar with
 it, I encourage you to check out the [textobj-user] plugin and the [related
 plugins] page. Even if not for repeatability, the plugins can be a great
 benefit.
-
-<!-- Summary -->
-<!-- ======= -->
