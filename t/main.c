@@ -16,6 +16,3 @@ main()
 {
   printf("helloo %s", "john");
 }
-
-
-2 + 3
