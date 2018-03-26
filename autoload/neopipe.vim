@@ -114,7 +114,7 @@ function! neopipe#pipe(first, last)
   let l:com = s:find('npipe_com', '', 0)
 
   if s:find('npipe_pty', 0, 0)
-    echoe "npipe_pty is depreecated"
+    echoe 'npipe_pty is depreecated'
     echoe "set npipe_type='t'"
     let w:npipe_type = 't'
   endif
