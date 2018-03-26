@@ -60,7 +60,7 @@ function! s:find(var, def, arr)
 endfunction
 
 function! s:err(id, data, event)
-  echoe printf('error: %s', join(a:data))
+  echoerr printf('error: %s', join(a:data))
 endfunction
 
 function! s:out(id, data, event)
@@ -95,29 +95,22 @@ function! s:apply_contents(contents)
   endif
 
 endfunction
-
-function! s:term_after(id, data, event)
-  " exe w:child . "wincmd w"
-  exe 'sbuffer' w:child
-  exe line('$')
-  wincmd p
-endfunction
 "}}}
 
 " pubic function {{{
 function! neopipe#pipe(first, last)
+
+  if s:find('npipe_pty', 0, 0)
+    echoerr 'npipe_pty is depreecated'
+    echoerr "set npipe_type='t'"
+    let w:npipe_type = 't'
+  endif
 
   let l:lines = getline(a:first, a:last) + ['']
 
   let l:type = s:find('npipe_type', '', 0)
 
   let l:com = s:find('npipe_com', '', 0)
-
-  if s:find('npipe_pty', 0, 0)
-    echoe 'npipe_pty is depreecated'
-    echoe "set npipe_type='t'"
-    let w:npipe_type = 't'
-  endif
 
   if l:type ==# 't'
     if !exists('w:npipe_job')
@@ -126,7 +119,8 @@ function! neopipe#pipe(first, last)
       exe printf('%s %s', s:find('npipe_split', 'vsplit', 0), l:bufname)
 
       let l:child = bufnr('%')
-      let l:npipe_job = termopen(l:com, {'on_stdout': function('s:term_after'), 'on_stderr': function('s:err') })
+      let l:npipe_job = termopen(l:com, {'on_stderr': function('s:err') })
+      au BufLeave <buffer> normal! G
       wincmd p
       let w:npipe_job = l:npipe_job
       let w:child = l:child
