@@ -24,14 +24,13 @@ endfunction
 function! s:find(var, def, arr)
 
   " window-local
-  let l:var = get(w:, a:var)
-  if !empty(l:var)
-    return l:var
+  if exists('w:'.a:var)
+    return get(w:, a:var)
   endif
 
   " buffer-local
-  let l:var = get(b:, a:var)
-  if !empty(l:var)
+  if exists('b:'.a:var)
+    let l:var = get(b:, a:var)
     call setwinvar('', a:var, l:var)
     return l:var
   endif
@@ -47,8 +46,8 @@ function! s:find(var, def, arr)
   endif
 
   " global
-  let l:var = get(g:, a:var)
-  if !empty(l:var)
+  if exists('g:'.a:var)
+    let l:var = get(g:, a:var)
     call setwinvar('', a:var, l:var)
     return l:var
   endif
